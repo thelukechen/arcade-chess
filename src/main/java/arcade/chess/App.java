@@ -11,11 +11,20 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+    Board board;
+    TakenGrid whiteTakes;
+    TakenGrid blackTakes;
+
     @Override
     public void start(Stage stage) {
         VBox vbox = new VBox();
-        Board board = new Board();
-        vbox.getChildren().addAll(board);
+        board = new Board();
+        board.setApp(this);
+        whiteTakes = new TakenGrid();
+        whiteTakes.setApp(this);
+        blackTakes = new TakenGrid();
+        blackTakes.setApp(this);
+        vbox.getChildren().addAll(blackTakes, board, whiteTakes);
 
         Scene scene = new Scene(vbox);
         stage.setTitle("Chess Application");
