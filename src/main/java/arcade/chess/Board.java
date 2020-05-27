@@ -18,13 +18,37 @@ public class Board extends GridPane {
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                Square square = null;
+                Square square;
                 if (j == 6) {
                     //white pawns
                     square = new Square(i, j, new Pawn(true, i, j));
                 } else if (j == 1) {
                     //black pawns
                     square = new Square(i, j, new Pawn(false, i, j));
+                } else if (j == 7 && (i == 0 || i == 7)) {
+                    //white rooks
+                    square = new Square(i, j, new Rook(true, i, j));
+                } else if (j == 0 && (i == 0 || i == 7)) {
+                    //black rooks
+                    square = new Square(i, j, new Rook(false, i, j));
+                } else if (j == 7 && (i == 2 || i == 5)) {
+                    //white bishops
+                    square = new Square(i, j, new Bishop(true, i, j));
+                } else if (j == 0 && (i == 2 || i == 5)) {
+                    //black bishops
+                    square = new Square(i, j, new Bishop(false, i, j));
+                } else if (j == 7 && i == 3) {
+                    //white queen
+                    square = new Square(i, j, new Queen(true, i, j));
+                } else if (j == 0 && i == 3) {
+                    //black queen
+                    square = new Square(i, j, new Queen(false, i, j));
+                } else if (j == 7 && i == 4) {
+                    //white queen
+                    square = new Square(i, j, new King(true, i, j));
+                } else if (j == 0 && i == 4) {
+                    //black queen
+                    square = new Square(i, j, new King(false, i, j));
                 } else {
                     //empty squares
                     square = new Square(i, j, new Empty(i, j));
@@ -52,9 +76,6 @@ public class Board extends GridPane {
             } else {
                 firstClick = true;
             }
-//            System.out.println(squareClicked.getPiece().getType() + ", " + squareClicked.getPiece().getColor());
-//          System.out.println(squareClicked.getPiece().getX() + ", " + squareClicked.getPiece().getY());
-//          System.out.println(squareClicked.getPiece().getCoordinate());
         } else {
             // second click
             Square target = (Square) e.getSource();
@@ -64,10 +85,6 @@ public class Board extends GridPane {
                 System.out.println("Invalid Move");
             }
             firstClick = false;
-//            System.out.println(target.getPiece().getType() + ", " + target.getPiece().getColor());
-//          System.out.println(target.getPiece().getX() + ", " + target.getPiece().getY());
-//          System.out.println(target.getPiece().getCoordinate());
-
         }
     }
 

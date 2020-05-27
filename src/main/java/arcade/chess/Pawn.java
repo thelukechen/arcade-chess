@@ -17,6 +17,7 @@ public class Pawn extends Piece {
     /**
      * Constructs a {@code Piece} object with a certain color
      * and coordinates.
+     *
      * @param a the color
      * @param i the x-coordinate
      * @param j the y-coordinate
@@ -42,24 +43,31 @@ public class Pawn extends Piece {
         //Up 2
         if (isFirstMove()) {
             coordinate = 10 * getX() + (getY() + (2 * getSide()));
-            if (lookVertical(true) > 1 && isInGrid(coordinate)) {
+            if (lookVertical(true) > 2 && isInGrid(coordinate)) {
                 list.add(coordinate);
             }
         }
         //Up 1
         coordinate = 10 * getX() + (getY() + getSide());
-        if (lookVertical(true) > 0 && isInGrid(coordinate)) {
+        if (lookVertical(true) > 1 && isInGrid(coordinate)) {
             list.add(coordinate);
         }
         //Diagonal Left Take
         coordinate = 10 * (getX() + getSide()) + (getY() + getSide());
-        if (lookNeg(true) == 0 && isInGrid(coordinate)) {
-            list.add(coordinate);
+        int side;
+        if (lookDiagonal(true, false) == 1 && isInGrid(coordinate)) {
+            side = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getSide();
+            if (side != this.getSide() && side != 0) {
+                list.add(coordinate);
+            }
         }
         //Diagonal Right Take
         coordinate = 10 * (getX() - getSide()) + (getY() + getSide());
-        if (lookPos(true) == 0 && isInGrid(coordinate)) {
-            list.add(coordinate);
+        if (lookDiagonal(true, true) == 1 && isInGrid(coordinate)) {
+            side = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getSide();
+            if (side != this.getSide() && side != 0) {
+                list.add(coordinate);
+            }
         }
         //En Passant
         addEnPassant(list);
@@ -68,16 +76,18 @@ public class Pawn extends Piece {
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
         }
+        System.out.println("left: " + lookDiagonal(true, false) + " right: " + lookDiagonal(true, true));
         return array;
     }
 
     /**
      * Adds if the {@code Pawn} object has the en passant functionality.
+     *
      * @param list the arraylist in {@code possibleMoves}
      */
     public void addEnPassant(ArrayList<Integer> list) {
         Piece piece;
-        if (lookHorizontal(false) == 0 && isInGrid((10 * (getX() + getSide())) + getY())) {
+        if (lookHorizontal(false) == 1 && isInGrid((10 * (getX() + getSide())) + getY())) {
             piece = getSquare().getBoard().squareArr[getX() + getSide()][getY()].getPiece();
             if ((piece.getColor() != getColor()) && piece.getType().equals("Pawn")) {
                 Pawn pawn = (Pawn) piece;
@@ -88,7 +98,7 @@ public class Pawn extends Piece {
 
             }
         }
-        if (lookHorizontal(true) == 0 && isInGrid((10 * (getX() - getSide())) + getY())) {
+        if (lookHorizontal(true) == 1 && isInGrid((10 * (getX() - getSide())) + getY())) {
             piece = getSquare().getBoard().squareArr[getX() - getSide()][getY()].getPiece();
             if ((piece.getColor() != getColor()) && piece.getType().equals("Pawn")) {
                 Pawn pawn = (Pawn) piece;
@@ -103,6 +113,7 @@ public class Pawn extends Piece {
 
     /**
      * Returns in the {@code Pawn} has just double moved.
+     *
      * @return true if it just double moved, false otherwise
      */
     public boolean isJustDoubleMoved() {
@@ -111,7 +122,8 @@ public class Pawn extends Piece {
 
     /**
      * Sets the value of {@code justDoubleMoved} in the {@code Pawn}.
-     * @param target the specified {@code Square} location
+     *
+     * @param target          the specified {@code Square} location
      * @param justDoubleMoved if {@code target} is null, sets {@code justDoubleMoved}
      *                        to this value
      */
@@ -127,6 +139,7 @@ public class Pawn extends Piece {
 
     /**
      * Returns the en passant coordinates.
+     *
      * @return the en passant coordinates
      */
     public int getEnPassant() {
@@ -135,6 +148,7 @@ public class Pawn extends Piece {
 
     /**
      * Sets the {@code enPassant} value of the {@code Pawn}.
+     *
      * @param enPassant the specified value
      */
     public void setEnPassant(int enPassant) {

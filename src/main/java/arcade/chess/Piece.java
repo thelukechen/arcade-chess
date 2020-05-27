@@ -63,8 +63,12 @@ public abstract class Piece {
         int upOrDown = up ? 1 : -1;
         for (int i = 1; i < 8; i++) {
             try {
-                if (this.getSquare().getBoard().squareArr[getX()][getY() + (upOrDown * (i * side))].getPiece().getType().equals("Empty")) {
+                Square square = this.getSquare().getBoard().squareArr[getX()][getY() + (upOrDown * (i * side))];
+                if (square.getPiece().getType().equals("Empty")) {
                     value++;
+                } else if (square.getPiece().getColor() != this.getColor()) {
+                    value++;
+                    return value;
                 } else {
                     return value;
                 }
@@ -86,8 +90,12 @@ public abstract class Piece {
         int leftOrRight = right ? -1 : 1;
         for (int i = 1; i < 8; i++) {
             try {
-                if (this.getSquare().getBoard().squareArr[getX() + (leftOrRight * (i * side))][getY()].getPiece().getType().equals("Empty")) {
+                Square square = this.getSquare().getBoard().squareArr[getX() + (leftOrRight * (i * side))][getY()];
+                if (square.getPiece().getType().equals("Empty")) {
                     value++;
+                } else if (square.getPiece().getColor() != this.getColor()) {
+                    value++;
+                    return value;
                 } else {
                     return value;
                 }
@@ -99,57 +107,31 @@ public abstract class Piece {
     }
 
     /**
-     * Number of squares along the negative diagonal.
+     * Number of squares along the diagonals.
      *
      * @param up true for above, false for below
+     * @param right true for right, false for left
      * @return value
      */
-    public int lookNeg(boolean up) {
+    public int lookDiagonal(boolean up, boolean right) {
         int value = 0;
+        int rightOrLeft = right ? 1 : -1;
         for (int i = 1; i < 8; i++) {
             try {
+                Square square;
                 if (up) {
-                    if (this.getSquare().getBoard().squareArr[getX() + (i * side)][getY() + (i * side)].getPiece().getType().equals("Empty")) {
-                        value++;
-                    } else {
-                        return value;
-                    }
+                    square = this.getSquare().getBoard().squareArr[getX() - (rightOrLeft * (i * side))][getY() + (i * side)];
                 } else {
-                    if (this.getSquare().getBoard().squareArr[getX() - (i * side)][getY() - (i * side)].getPiece().getType().equals("Empty")) {
-                        value++;
-                    } else {
-                        return value;
-                    }
+                    rightOrLeft = right ? -1 : 1;
+                    square = this.getSquare().getBoard().squareArr[getX() + (rightOrLeft * (i * side))][getY() - (i * side)];
                 }
-            } catch (IndexOutOfBoundsException ignored) {
-                return value;
-            }
-        }
-        return value;
-    }
-
-    /**
-     * Number of squares along the positive diagonal.
-     *
-     * @param up true for above, false for below
-     * @return value
-     */
-    public int lookPos(boolean up) {
-        int value = 0;
-        for (int i = 1; i < 8; i++) {
-            try {
-                if (up) {
-                    if (this.getSquare().getBoard().squareArr[getX() - (i * side)][getY() + (i * side)].getPiece().getType().equals("Empty")) {
-                        value++;
-                    } else {
-                        return value;
-                    }
+                if (square.getPiece().getType().equals("Empty")) {
+                    value++;
+                } else if (square.getPiece().getColor() != this.getColor()) {
+                    value++;
+                    return value;
                 } else {
-                    if (this.getSquare().getBoard().squareArr[getX() + (i * side)][getY() - (i * side)].getPiece().getType().equals("Empty")) {
-                        value++;
-                    } else {
-                        return value;
-                    }
+                    return value;
                 }
             } catch (IndexOutOfBoundsException ignored) {
                 return value;
@@ -164,7 +146,7 @@ public abstract class Piece {
      * @return if the coordinate is on the board
      */
     public boolean isInGrid(int coordinate) {
-        return coordinate > 0 && coordinate < 77;
+        return coordinate >= 0 && coordinate <= 77;
     }
 
     /**
