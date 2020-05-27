@@ -40,41 +40,16 @@ public class Square extends StackPane {
     }
 
     public void moveTo(Square target) {
-        for (int i = 0; i < this.getBoard().squareArr.length; i++) {
-            for (int j = 0; j < this.getBoard().squareArr[i].length; j++) {
-                if (this.getBoard().squareArr[i][j].getPiece().getType().equals("Pawn")) {
-                    Pawn pawn = (Pawn) this.getBoard().squareArr[i][j].getPiece();
-                    pawn.setJustDoubleMoved(null,false);
-                }
-
-            }
-        }
+        // set all pawns as false double moved
+        setAllDoubleMoved();
         //en passant
-        if (this.getPiece().getType().equals("Pawn")) {
-            Pawn pawn = (Pawn) this.getPiece();
-            pawn.setJustDoubleMoved(target, true);
-            if (pawn.getEnPassant() > 0) {
-                Square passantSquare = this.getBoard().squareArr[getX() + getPiece().getSide()][getY()];
-                if (!passantSquare.getPiece().getType().equals("Pawn")) {
-                    passantSquare = this.getBoard().squareArr[getX() - getPiece().getSide()][getY()];
-                }
-                if (pawn.getEnPassant() == target.getCoordinate() && passantSquare.getPiece().getColor()) {
-                    this.getBoard().app.blackTakes.add(passantSquare.getPiece());
-                } else {
-                    this.getBoard().app.whiteTakes.add(passantSquare.getPiece());
-                }
-                passantSquare.setPiece(new Empty(passantSquare.getX(), passantSquare.getY()));
-                pawn.setEnPassant(-1);
-            }
-        }
+        checkEnPassant(target);
         //piece taken
         if (!target.getPiece().getType().equals("Empty")) {
             if (target.getPiece().getColor()) {
                 getBoard().app.blackTakes.add(target.getPiece());
-//                System.out.println(target.getPiece() + ",1 " + target.getPiece().getColor());
             } else {
                 getBoard().app.whiteTakes.add(target.getPiece());
-//                System.out.println(target.getPiece() + ",2 " + target.getPiece().getColor());
             }
         }
         //swap
@@ -112,6 +87,35 @@ public class Square extends StackPane {
 
     public int getY() {
         return this.y;
+    }
+
+    public void setAllDoubleMoved() {
+        for (int i = 0; i < this.getBoard().squareArr.length; i++) {
+            for (int j = 0; j < this.getBoard().squareArr[i].length; j++) {
+                if (this.getBoard().squareArr[i][j].getPiece().getType().equals("Pawn")) {
+                    Pawn pawn = (Pawn) this.getBoard().squareArr[i][j].getPiece();
+                    pawn.setJustDoubleMoved(null,false);
+                }
+
+            }
+        }
+    }
+
+    public void checkEnPassant(Square target) {
+        if (this.getPiece().getType().equals("Pawn")) {
+            Pawn pawn = (Pawn) this.getPiece();
+            pawn.setJustDoubleMoved(target, true);
+            if (pawn.getEnPassant() > 0) {
+                Square passantSquare = getBoard().squareArr[target.getX()][target.getY() - getPiece().getSide()];
+                if (pawn.getEnPassant() == target.getCoordinate() && passantSquare.getPiece().getColor()) {
+                    this.getBoard().app.blackTakes.add(passantSquare.getPiece());
+                } else {
+                    this.getBoard().app.whiteTakes.add(passantSquare.getPiece());
+                }
+                passantSquare.setPiece(new Empty(passantSquare.getX(), passantSquare.getY()));
+                pawn.setEnPassant(-1);
+            }
+        }
     }
 
     /**
