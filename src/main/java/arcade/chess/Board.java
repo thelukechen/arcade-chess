@@ -31,6 +31,12 @@ public class Board extends GridPane {
                 } else if (j == 0 && (i == 0 || i == 7)) {
                     //black rooks
                     square = new Square(i, j, new Rook(false, i, j));
+                } else if (j == 7 && (i == 1 || i == 6)) {
+                    //white knights
+                    square = new Square(i, j, new Knight(true, i, j));
+                } else if (j == 0 && (i == 1 || i == 6)) {
+                    //black knights
+                    square = new Square(i, j, new Knight(false, i, j));
                 } else if (j == 7 && (i == 2 || i == 5)) {
                     //white bishops
                     square = new Square(i, j, new Bishop(true, i, j));
@@ -43,13 +49,13 @@ public class Board extends GridPane {
                 } else if (j == 0 && i == 3) {
                     //black queen
                     square = new Square(i, j, new Queen(false, i, j));
-                } else if (j == 7 && i == 4) {
+                } else if (j == 7) {
                     //white queen
                     square = new Square(i, j, new King(true, i, j));
-                } else if (j == 0 && i == 4) {
+                } else if (j == 0) {
                     //black queen
                     square = new Square(i, j, new King(false, i, j));
-                } else {
+                }  else {
                     //empty squares
                     square = new Square(i, j, new Empty(i, j));
                 }
