@@ -1,7 +1,6 @@
 package arcade.chess;
 
 import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 
 /**
@@ -31,7 +30,25 @@ public class Knight extends Piece {
     public int[] possibleMoves() {
         ArrayList<Integer> list = new ArrayList<>();
         int coordinate;
-        
+        int[] one = new int[] {1, -1};
+        for (Integer e : one) {
+            for (Integer i : one) {
+                //all Ls
+                if (isInGrid(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))))) {
+                    Square square = this.getSquare().getBoard().squareArr[getX() - (e * getSide())][getY() + (i * (2 * getSide()))];
+                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                        list.add(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))));
+                    }
+                }
+                //all guns
+                if (isInGrid(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())))) {
+                    Square square = this.getSquare().getBoard().squareArr[getX() - (e * (2 * getSide()))][getY() + (i * getSide())];
+                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                        list.add(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())));
+                    }
+                }
+            }
+        }
         int[] array = new int[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);

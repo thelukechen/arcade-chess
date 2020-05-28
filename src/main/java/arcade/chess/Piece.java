@@ -146,6 +146,12 @@ public abstract class Piece {
      * @return if the coordinate is on the board
      */
     public boolean isInGrid(int coordinate) {
+        int[] invalidNums = new int[] {8, 9, 18, 19, 28, 29, 38, 39, 48, 49, 58, 59, 68, 69};
+        for (Integer e : invalidNums) {
+            if (e == coordinate) {
+                return false;
+            }
+        }
         return coordinate >= 0 && coordinate <= 77;
     }
 

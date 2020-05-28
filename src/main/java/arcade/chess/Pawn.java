@@ -76,7 +76,6 @@ public class Pawn extends Piece {
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
         }
-        System.out.println("left: " + lookDiagonal(true, false) + " right: " + lookDiagonal(true, true));
         return array;
     }
 
