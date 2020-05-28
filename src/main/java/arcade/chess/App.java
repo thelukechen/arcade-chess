@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 
 /**
  * Executes a {@code Chess} game.
- *
  */
 public class App extends Application {
 

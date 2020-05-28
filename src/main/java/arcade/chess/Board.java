@@ -4,6 +4,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
+/**
+ * Application to construct a {@code Board} with Mouse Click
+ * functionality.
+ */
 public class Board extends GridPane {
 
     App app;
@@ -13,6 +17,11 @@ public class Board extends GridPane {
     Square squareClicked;
     int whoseTurn = -1;
 
+    /**
+     * Constructs an {@code Board} object with all the
+     * chess pieces in place. Also sets up game logic and mouse
+     * functionality.
+     */
     public Board() {
         super();
 
@@ -71,6 +80,12 @@ public class Board extends GridPane {
         this.setHeight(this.getWidth());
     }
 
+    /**
+     * MouseEvent handler for clicking on the chess {@code Pieces}.
+     * Also includes game logic and calls the {@link Square} {@code moveTo}
+     * method.
+     * @param e the mouse event
+     */
     public void click(MouseEvent e) {
         if (!firstClick) {
             // first click
@@ -106,6 +121,10 @@ public class Board extends GridPane {
         }
     }
 
+    /**
+     * Sets the specified app to this
+     * @param app the specified app
+     */
     public void setApp(App app) {
         this.app = app;
     }
