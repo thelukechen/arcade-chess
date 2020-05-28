@@ -25,7 +25,7 @@ public class Pawn extends Piece {
     public Pawn(boolean a, int i, int j) {
         super();
 
-        this.setColor(a);
+        this.setSide(a ? -1 : 1);
         this.setCoordinate(10 * i + j);
         this.justDoubleMoved = false;
         this.enPassant = -1;

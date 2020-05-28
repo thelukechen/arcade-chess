@@ -9,9 +9,9 @@ public class Board extends GridPane {
     App app;
     Square[][] squareArr = new Square[8][8];
     final int size = 8;
-
     boolean firstClick = false;
     Square squareClicked;
+    int whoseTurn = -1;
 
     public Board() {
         super();
@@ -75,7 +75,13 @@ public class Board extends GridPane {
         if (!firstClick) {
             // first click
             squareClicked = (Square) e.getSource();
-            if (squareClicked.getPiece().getType().equals("Empty")) {
+            if (whoseTurn != squareClicked.getPiece().getSide()) {
+                if (whoseTurn == -1) {
+                    System.out.println("It is white's turn.");
+                } else {
+                    System.out.println("It is blacks's turn.");
+                }
+            } else if (squareClicked.getPiece().getType().equals("Empty")) {
                 firstClick = false;
             } else if (squareClicked.getPiece().possibleMoves().length == 0) {
                 System.out.println("No Moves Available");
@@ -87,10 +93,16 @@ public class Board extends GridPane {
             Square target = (Square) e.getSource();
             if (squareClicked.getPiece().isValidMove(target)) {
                 squareClicked.moveTo(target);
-            } else if (squareClicked.getCoordinate() != target.getCoordinate()) {
+                whoseTurn = whoseTurn == -1 ? 1 : -1;
+                firstClick = false;
+            } else if (squareClicked.getPiece().getSide() == target.getPiece().getSide()) {
+                squareClicked = target;
+            } else if (squareClicked.getCoordinate() != target.getCoordinate()) { //for if u click on the same piece
+                System.out.println(squareClicked.getCoordinate());
+                System.out.println(target.getCoordinate());
                 System.out.println("Invalid Move");
+                firstClick = false;
             }
-            firstClick = false;
         }
     }
 

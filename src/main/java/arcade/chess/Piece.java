@@ -186,6 +186,7 @@ public abstract class Piece {
      * @param side the specified {@code side} value
      */
     public void setSide(int side) {
+        this.color = side == -1;
         this.side = side;
     }
 

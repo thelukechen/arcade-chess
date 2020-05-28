@@ -19,7 +19,7 @@ public class Queen extends Piece {
     public Queen(boolean a, int i, int j) {
         super();
 
-        this.setColor(a);
+        this.setSide(a ? -1 : 1);
         this.setCoordinate(10 * i + j);
     }
 
