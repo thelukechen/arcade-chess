@@ -17,6 +17,7 @@ public abstract class Piece {
     private Square square;
     private int side;
     private boolean color;
+    private int[] possibleMoves;
 
     /**
      * Returns the image of the {@code Piece} object with color.
@@ -44,7 +45,7 @@ public abstract class Piece {
      * @return true if allowed to make move
      */
     public boolean isValidMove(Square target) {
-        for (int e : this.possibleMoves()) {
+        for (int e : getPossibleMoves()) {
             if (target.getCoordinate() == e) {
                 return true;
             }
@@ -153,6 +154,22 @@ public abstract class Piece {
             }
         }
         return coordinate >= 0 && coordinate <= 77;
+    }
+
+    /**
+     * Returns the integer array of possible moves for the {@code Piece}.
+     * @return integer array of possible moves
+     */
+    public int[] getPossibleMoves() {
+        return this.possibleMoves;
+    }
+
+    /**
+     * Sets the integer array of possible moves for the {@code Piece}.
+     * @param possibleMoves the specified integer array
+     */
+    public void setPossibleMoves(int[] possibleMoves) {
+        this.possibleMoves = possibleMoves;
     }
 
     /**

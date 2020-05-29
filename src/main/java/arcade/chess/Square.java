@@ -58,10 +58,13 @@ public class Square extends StackPane {
      * @param target the target {@code Square}
      */
     public void moveTo(Square target) {
-        // set all pawns as false double moved
-        setAllDoubleMoved();
-        //en passant
-        checkEnPassant(target);
+        //check double move
+        if (!checkDoubleMoved(target)) {
+            //en passant
+            if (!checkEnPassant(target)) {
+                setAllDoubleMovedFalse();
+            }
+        }
         //piece taken
         if (!target.getPiece().getType().equals("Empty")) {
             if (target.getPiece().getColor()) {
@@ -74,8 +77,61 @@ public class Square extends StackPane {
         int temp = this.getCoordinate();
         this.getPiece().setCoordinate(10 * target.getX() + target.getY());
         target.setPiece(this.getPiece());
+        //promotion
+        if (checkPromotion(target)) {
+            this.getBoard().app.setScene(new Promotion(getPiece().getColor(), this.getPiece().getCoordinate(), this.getBoard().app));
+        }
         target.getPiece().setFirstMove(false);
         this.setPiece(new Empty(temp / 10, temp % 10));
+    }
+
+    /**
+     * Checks if the {@code Pawn} object can perform a promotion.
+     * @param target the target {@code Square} location after promotion.
+     * @return true if promotion executed
+     */
+    public boolean checkPromotion(Square target) {
+        return this.getPiece().getType().equals("Pawn") && (target.getY() == 0 || target.getY() == 7);
+    }
+
+    /**
+     * Checks if the {@code Pawn} object can perform en passant.
+     * Adds the opposing pawn to the corresponding {@code TakenGrid}.
+     * @param target the target {@code Square} location after en passant
+     * @return true if en passant executed
+     */
+    public boolean checkEnPassant(Square target) {
+        if (this.getPiece().getType().equals("Pawn")) {
+            Pawn pawn = (Pawn) this.getPiece();
+            if (pawn.getEnPassant() == target.getCoordinate()) {
+                Square passantSquare = getBoard().squareArr[target.getX()][target.getY() - getPiece().getSide()];
+                if (pawn.getEnPassant() == target.getCoordinate() && passantSquare.getPiece().getColor()) {
+                    this.getBoard().app.blackTakes.add(passantSquare.getPiece());
+                } else {
+                    this.getBoard().app.whiteTakes.add(passantSquare.getPiece());
+                }
+                passantSquare.setPiece(new Empty(passantSquare.getX(), passantSquare.getY()));
+                pawn.setEnPassant(-1);
+                pawn.setJustDoubleMoved(false);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Checks if the {@code Pawn} object just double moved.
+     * @param target the target {@code Square} location
+     * @return true if {@code Pawn} just double moved.
+     */
+    public boolean checkDoubleMoved(Square target) {
+        if (this.getPiece().getType().equals("Pawn")) {
+            if (this.getX() == target.getX() && target.getY() == this.getY() + (2 * this.getPiece().getSide())) {
+                Pawn pawn = (Pawn) this.getPiece();
+                pawn.setJustDoubleMoved(true);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -139,36 +195,14 @@ public class Square extends StackPane {
      * Sets every {@code Pawn}'s {@code justDoubleMoved} to false
      * to negate the potential of en passant after the next move.
      */
-    public void setAllDoubleMoved() {
+    public void setAllDoubleMovedFalse() {
         for (int i = 0; i < this.getBoard().squareArr.length; i++) {
             for (int j = 0; j < this.getBoard().squareArr[i].length; j++) {
                 if (this.getBoard().squareArr[i][j].getPiece().getType().equals("Pawn")) {
                     Pawn pawn = (Pawn) this.getBoard().squareArr[i][j].getPiece();
-                    pawn.setJustDoubleMoved(null,false);
+                    pawn.setJustDoubleMoved(false);
                 }
 
-            }
-        }
-    }
-
-    /**
-     * Checks if the {@code Pawn} object can perform en passant.
-     * Adds the opposing pawn to the corresponding {@code TakenGrid}.
-     * @param target the target {@code Square} location after en passant
-     */
-    public void checkEnPassant(Square target) {
-        if (this.getPiece().getType().equals("Pawn")) {
-            Pawn pawn = (Pawn) this.getPiece();
-            pawn.setJustDoubleMoved(target, true);
-            if (pawn.getEnPassant() > 0) {
-                Square passantSquare = getBoard().squareArr[target.getX()][target.getY() - getPiece().getSide()];
-                if (pawn.getEnPassant() == target.getCoordinate() && passantSquare.getPiece().getColor()) {
-                    this.getBoard().app.blackTakes.add(passantSquare.getPiece());
-                } else {
-                    this.getBoard().app.whiteTakes.add(passantSquare.getPiece());
-                }
-                passantSquare.setPiece(new Empty(passantSquare.getX(), passantSquare.getY()));
-                pawn.setEnPassant(-1);
             }
         }
     }

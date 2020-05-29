@@ -49,7 +49,7 @@ public class Pawn extends Piece {
         }
         //Up 1
         coordinate = 10 * getX() + (getY() + getSide());
-        if (lookVertical(true) > 1 && isInGrid(coordinate)) {
+        if (lookVertical(true) > 0 && isInGrid(coordinate)) {
             list.add(coordinate);
         }
         //Diagonal Left Take
@@ -76,6 +76,8 @@ public class Pawn extends Piece {
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
         }
+        //System.out.println(array.length);
+        this.setPossibleMoves(array);
         return array;
     }
 
@@ -93,8 +95,9 @@ public class Pawn extends Piece {
                 if (pawn.isJustDoubleMoved()) {
                     list.add(10 * (getX() + getSide()) + (getY() + getSide()));
                     setEnPassant(10 * (getX() + getSide()) + (getY() + getSide()));
+                    //pawn.setJustDoubleMoved(false);
+                    //System.out.println("run left");
                 }
-
             }
         }
         if (lookHorizontal(true) == 1 && isInGrid((10 * (getX() - getSide())) + getY())) {
@@ -104,15 +107,15 @@ public class Pawn extends Piece {
                 if (pawn.isJustDoubleMoved()) {
                     list.add(10 * (getX() - getSide()) + (getY() + getSide()));
                     setEnPassant(10 * (getX() - getSide()) + (getY() + getSide()));
+                    //pawn.setJustDoubleMoved(false);
+                    //System.out.println("run right");
                 }
-
             }
         }
     }
 
     /**
      * Returns in the {@code Pawn} has just double moved.
-     *
      * @return true if it just double moved, false otherwise
      */
     public boolean isJustDoubleMoved() {
@@ -121,19 +124,11 @@ public class Pawn extends Piece {
 
     /**
      * Sets the value of {@code justDoubleMoved} in the {@code Pawn}.
-     *
-     * @param target          the specified {@code Square} location
      * @param justDoubleMoved if {@code target} is null, sets {@code justDoubleMoved}
      *                        to this value
      */
-    public void setJustDoubleMoved(Square target, boolean justDoubleMoved) {
-        if (target != null) {
-            if (target.getCoordinate() == 10 * getX() + (getY() + (2 * getSide()))) {
-                this.justDoubleMoved = true;
-            }
-        } else {
-            this.justDoubleMoved = justDoubleMoved;
-        }
+    public void setJustDoubleMoved(boolean justDoubleMoved) {
+        this.justDoubleMoved = justDoubleMoved;
     }
 
     /**

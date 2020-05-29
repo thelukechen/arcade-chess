@@ -55,6 +55,7 @@ public class Bishop extends Piece {
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
         }
+        this.setPossibleMoves(array);
         return array;
     }
 

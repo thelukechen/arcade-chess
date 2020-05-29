@@ -2,6 +2,7 @@ package arcade.chess;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -13,27 +14,40 @@ public class App extends Application {
     Board board;
     TakenGrid whiteTakes;
     TakenGrid blackTakes;
+    VBox vbox;
+    Stage stage;
+
+    StackPane stack;
+    Promotion promotion;
+
 
     @Override
     public void start(Stage stage) {
-        VBox vbox = new VBox();
+        this.stage = stage;
+        vbox = new VBox();
         board = new Board();
         board.setApp(this);
         whiteTakes = new TakenGrid();
         whiteTakes.setApp(this);
         blackTakes = new TakenGrid();
         blackTakes.setApp(this);
-        vbox.getChildren().addAll(blackTakes, board, whiteTakes);
+        stack = new StackPane(board);
+        vbox.getChildren().addAll(blackTakes, stack, whiteTakes);
+
 
         Scene scene = new Scene(vbox);
-        stage.setTitle("Chess Application");
-        stage.setResizable(true);
-        stage.setScene(scene);
-        stage.sizeToScene();
-        stage.show();
+        this.stage.setTitle("Chess Application");
+        this.stage.setResizable(true);
+        this.stage.setScene(scene);
+        this.stage.sizeToScene();
+        this.stage.show();
     }
 
     public static void main(String[] args ) {
         launch();
+    }
+
+    public void setScene(Promotion promotion) {
+        this.stack.getChildren().add(promotion);
     }
 }

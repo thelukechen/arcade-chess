@@ -90,7 +90,7 @@ public class Board extends GridPane {
         if (!firstClick) {
             // first click
             squareClicked = (Square) e.getSource();
-            if (whoseTurn != squareClicked.getPiece().getSide()) {
+            if (whoseTurn != squareClicked.getPiece().getSide() && !squareClicked.getPiece().getType().equals("Empty")) {
                 if (whoseTurn == -1) {
                     System.out.println("It is white's turn.");
                 } else {
@@ -106,15 +106,16 @@ public class Board extends GridPane {
         } else {
             // second click
             Square target = (Square) e.getSource();
-            if (squareClicked.getPiece().isValidMove(target)) {
+            if (squareClicked.getPiece().getSide() == target.getPiece().getSide()) {
+                squareClicked = target;
+                squareClicked.getPiece().possibleMoves();
+            } else if (squareClicked.getCoordinate() == target.getCoordinate()) { //for if u click on the same piece
+                firstClick = false;
+            } else if (squareClicked.getPiece().isValidMove(target)) {
                 squareClicked.moveTo(target);
                 whoseTurn = whoseTurn == -1 ? 1 : -1;
                 firstClick = false;
-            } else if (squareClicked.getPiece().getSide() == target.getPiece().getSide()) {
-                squareClicked = target;
             } else if (squareClicked.getCoordinate() != target.getCoordinate()) { //for if u click on the same piece
-                System.out.println(squareClicked.getCoordinate());
-                System.out.println(target.getCoordinate());
                 System.out.println("Invalid Move");
                 firstClick = false;
             }

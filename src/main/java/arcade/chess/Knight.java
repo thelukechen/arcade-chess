@@ -35,17 +35,36 @@ public class Knight extends Piece {
             for (Integer i : one) {
                 //all Ls
                 if (isInGrid(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))))) {
-                    Square square = this.getSquare().getBoard().squareArr[getX() - (e * getSide())][getY() + (i * (2 * getSide()))];
-                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
-                        list.add(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))));
+                    //problem
+                    try {
+                        Square square = this.getSquare().getBoard().squareArr[getX() - (e * getSide())][getY() + (i * (2 * getSide()))];
+                        if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                            list.add(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))));
+                        }
+//                        System.out.println("L : " + ((10 * (getX() - (e * getSide()))) + (getY() + (i * (2 * getSide())))));
+//                        System.out.println(isInGrid(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide())))));
+                    } catch (NullPointerException npe) {
+//                        System.out.println((getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))) + "");
+//                        System.out.println("NPL : " + ((10 * (getX() - (e * getSide()))) + (getY() + (i * (2 * getSide())))));
+//                        System.out.println(isInGrid(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide())))));
                     }
+
                 }
                 //all guns
                 if (isInGrid(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())))) {
-                    Square square = this.getSquare().getBoard().squareArr[getX() - (e * (2 * getSide()))][getY() + (i * getSide())];
-                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
-                        list.add(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())));
+                    try {
+                        Square square = this.getSquare().getBoard().squareArr[getX() - (e * (2 * getSide()))][getY() + (i * getSide())];
+                        if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                            list.add(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())));
+                        }
+//                        System.out.println("Gun : " + ((10 * (getX() - (e * (2 * getSide())))) + (getY() + (i * getSide()))));
+//                        System.out.println(isInGrid(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide()))));
+                    } catch (NullPointerException npe) {
+//                        System.out.println((getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())) + "");
+//                        System.out.println("NPGun : " + ((10 * (getX() - (e * (2 * getSide())))) + (getY() + (i * getSide()))));
+//                        System.out.println(isInGrid(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide()))));
                     }
+
                 }
             }
         }
@@ -53,6 +72,7 @@ public class Knight extends Piece {
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
         }
+        this.setPossibleMoves(array);
         return array;
     }
 
