@@ -69,8 +69,10 @@ public class Square extends StackPane {
         if (!target.getPiece().getType().equals("Empty")) {
             if (target.getPiece().getColor()) {
                 getBoard().app.black.getTaken().add(target.getPiece());
+                getBoard().app.black.getTaken().updateDifference(getBoard().app.white.getTaken());
             } else {
                 getBoard().app.white.getTaken().add(target.getPiece());
+                getBoard().app.white.getTaken().updateDifference(getBoard().app.black.getTaken());
             }
         }
         //swap
@@ -107,8 +109,10 @@ public class Square extends StackPane {
                 Square passantSquare = getBoard().squareArr[target.getX()][target.getY() - getPiece().getSide()];
                 if (pawn.getEnPassant() == target.getCoordinate() && passantSquare.getPiece().getColor()) {
                     this.getBoard().app.black.getTaken().add(passantSquare.getPiece());
+                    getBoard().app.black.getTaken().updateDifference(getBoard().app.white.getTaken());
                 } else {
                     this.getBoard().app.white.getTaken().add(passantSquare.getPiece());
+                    getBoard().app.white.getTaken().updateDifference(getBoard().app.black.getTaken());
                 }
                 passantSquare.setPiece(new Empty(passantSquare.getX(), passantSquare.getY()));
                 pawn.setEnPassant(-1);

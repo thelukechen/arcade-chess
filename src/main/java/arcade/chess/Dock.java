@@ -6,7 +6,11 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -17,7 +21,6 @@ import javafx.scene.text.Text;
  * housing the description, timer, and taken pieces.
  */
 public class Dock extends HBox {
-    //taken add difference between pieces on each side
 
     private App app;
     private final TakenGrid taken;

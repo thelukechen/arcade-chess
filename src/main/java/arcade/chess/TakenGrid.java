@@ -1,8 +1,14 @@
 package arcade.chess;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Application for a {@code TakenGrid} object.
@@ -11,9 +17,11 @@ import javafx.scene.layout.GridPane;
 public class TakenGrid extends GridPane {
 
     private App app;
-    private final ImageView[] piecesTaken = new ImageView[15];
+    private ArrayList<Piece> piecesTaken = new ArrayList<>();
     private int count;
     private final boolean color;
+    private Label value;
+    HashMap<String, Integer> pieceValues;
 
     /**
      * Constructs a {@code TakenGrid} object with
@@ -21,13 +29,17 @@ public class TakenGrid extends GridPane {
      */
     public TakenGrid(boolean color) {
         this.color = color;
-        for (int i = 0; i < 15; i++) {
-            ImageView iv = new ImageView();
-            iv.setFitHeight(40);
-            iv.setFitWidth(40);
-            piecesTaken[i] = iv;
-            this.add(piecesTaken[i], i, 0);
-        }
+        pieceValues = new HashMap<>();
+        pieceValues.put("Pawn", 1);
+        pieceValues.put("Knight", 3);
+        pieceValues.put("Bishop", 3);
+        pieceValues.put("Rook", 5);
+        pieceValues.put("Queen", 9);
+        value = new Label("");
+        value.setTextFill(Color.WHITE);
+        value.setPrefSize(40, 40);
+        value.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 12));
+        this.add(value, 0, 0);
         count = 0;
         this.setAlignment(Pos.BASELINE_LEFT);
     }
@@ -45,7 +57,14 @@ public class TakenGrid extends GridPane {
      * @param piece the specified {@code Piece}
      */
     public void add(Piece piece) {
-        piecesTaken[count].setImage(piece.image());
+        ImageView iv = new ImageView(piece.image());
+        iv.setFitHeight(40);
+        iv.setFitWidth(40);
+        piecesTaken.add(piece);
+        System.out.println("array length" + piecesTaken.size());
+        this.getChildren().remove(count);
+        this.add(iv, count, 0);
+        this.add(value, count + 1, 0);
         count++;
     }
 
@@ -63,5 +82,30 @@ public class TakenGrid extends GridPane {
      */
     public App getApp() {
         return this.app;
+    }
+
+    public ArrayList<Piece> getPiecesTaken() {
+        return this.piecesTaken;
+    }
+
+    public void updateDifference(TakenGrid other) {
+        int thisDock = 0;
+        int otherDock = 0;
+        for (Piece e : this.piecesTaken) {
+            thisDock += pieceValues.get(e.getType());
+        }
+        for (Piece e : other.piecesTaken) {
+            otherDock += pieceValues.get(e.getType());
+        }
+        if (thisDock > otherDock) {
+            this.value.setText(" +" + (thisDock - otherDock));
+            other.value.setText("");
+        } else if (otherDock > thisDock) {
+            other.value.setText(" +" + (otherDock - thisDock));
+            this.value.setText("");
+        } else {
+            value.setText("");
+            other.value.setText("");
+        }
     }
 }
