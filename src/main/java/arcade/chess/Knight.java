@@ -34,40 +34,24 @@ public class Knight extends Piece {
         for (Integer e : one) {
             for (Integer i : one) {
                 //all Ls
-                if (isInGrid(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))))) {
-                    //problem
-                    try {
-                        Square square = this.getSquare().getBoard().squareArr[getX() - (e * getSide())][getY() + (i * (2 * getSide()))];
-                        if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
-                            list.add(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))));
-                        }
-//                        System.out.println("L : " + ((10 * (getX() - (e * getSide()))) + (getY() + (i * (2 * getSide())))));
-//                        System.out.println(isInGrid(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide())))));
-                    } catch (NullPointerException npe) {
-//                        System.out.println((getX() - (e * getSide())) + (getY() + (i * (2 * getSide()))) + "");
-//                        System.out.println("NPL : " + ((10 * (getX() - (e * getSide()))) + (getY() + (i * (2 * getSide())))));
-//                        System.out.println(isInGrid(10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide())))));
+                coordinate = 10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide())));
+                if (isInGrid(coordinate)) {
+                    Square square = this.getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10];
+                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                        list.add(coordinate);
                     }
-
                 }
                 //all guns
-                if (isInGrid(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())))) {
-                    try {
-                        Square square = this.getSquare().getBoard().squareArr[getX() - (e * (2 * getSide()))][getY() + (i * getSide())];
-                        if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
-                            list.add(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())));
-                        }
-//                        System.out.println("Gun : " + ((10 * (getX() - (e * (2 * getSide())))) + (getY() + (i * getSide()))));
-//                        System.out.println(isInGrid(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide()))));
-                    } catch (NullPointerException npe) {
-//                        System.out.println((getX() - (e * (2 * getSide()))) + (getY() + (i * getSide())) + "");
-//                        System.out.println("NPGun : " + ((10 * (getX() - (e * (2 * getSide())))) + (getY() + (i * getSide()))));
-//                        System.out.println(isInGrid(10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide()))));
+                coordinate = 10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide()));
+                if (isInGrid(coordinate)) {
+                    Square square = this.getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10];
+                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                        list.add(coordinate);
                     }
-
                 }
             }
         }
+        //array
         int[] array = new int[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
@@ -81,9 +65,9 @@ public class Knight extends Piece {
      */
     public Image image() {
         if (getColor()) {
-            return new Image("/knightW.png");
+            return new Image("/knightW.png", 80, 80, true, false);
         } else {
-            return new Image("/knightB.png");
+            return new Image("/knightB.png", 80, 80, true, false);
         }
     }
 

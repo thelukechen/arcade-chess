@@ -2,7 +2,6 @@ package arcade.chess;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -12,28 +11,25 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     Board board;
-    TakenGrid whiteTakes;
-    TakenGrid blackTakes;
     VBox vbox;
     Stage stage;
-
-    StackPane stack;
-    Promotion promotion;
-
+    Dock white;
+    Dock black;
 
     @Override
     public void start(Stage stage) {
+
         this.stage = stage;
         vbox = new VBox();
         board = new Board();
         board.setApp(this);
-        whiteTakes = new TakenGrid();
-        whiteTakes.setApp(this);
-        blackTakes = new TakenGrid();
-        blackTakes.setApp(this);
-        stack = new StackPane(board);
-        vbox.getChildren().addAll(blackTakes, stack, whiteTakes);
 
+        white = new Dock(true);
+        white.setApp(this);
+        black = new Dock(false);
+        black.setApp(this);
+
+        vbox.getChildren().addAll(black, board, white);
 
         Scene scene = new Scene(vbox);
         this.stage.setTitle("Chess Application");
@@ -47,7 +43,11 @@ public class App extends Application {
         launch();
     }
 
-    public void setScene(Promotion promotion) {
-        this.stack.getChildren().add(promotion);
+    /**
+     * Adds the {@code Promotion} object into the {@code Board} stack object.
+     * @param promotion the {@code Promotion} object
+     */
+    public void createPromotion(Promotion promotion) {
+        this.board.getBoard().getChildren().add(promotion);
     }
 }

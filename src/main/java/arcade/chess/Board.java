@@ -1,21 +1,28 @@
 package arcade.chess;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 /**
  * Application to construct a {@code Board} with Mouse Click
  * functionality.
  */
-public class Board extends GridPane {
+public class Board extends BorderPane {
+
+    private final StackPane board;
+    private boolean firstClick = false;
+    private Square squareClicked;
+    private int whoseTurn = -1;
 
     App app;
     Square[][] squareArr = new Square[8][8];
-    final int size = 8;
-    boolean firstClick = false;
-    Square squareClicked;
-    int whoseTurn = -1;
 
     /**
      * Constructs an {@code Board} object with all the
@@ -24,9 +31,10 @@ public class Board extends GridPane {
      */
     public Board() {
         super();
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        GridPane grid = new GridPane();
+        board = new StackPane();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 Square square;
                 if (j == 6) {
                     //white pawns
@@ -71,13 +79,62 @@ public class Board extends GridPane {
                 square.setBoard(this);
                 squareArr[i][j] = square;
                 squareArr[i][j].setOnMouseClicked(this::click);
-
-                this.add(squareArr[i][j], i, j);
-                Board.setHgrow(square, Priority.ALWAYS);
+                grid.add(squareArr[i][j], i, j);
             }
         }
-        this.setMinSize(50, 50);
-        this.setHeight(this.getWidth());
+        board.getChildren().add(grid);
+        board.setMinSize(50, 50);
+        //board.setHeight(this.getWidth());
+        Color background = Color.rgb(139,69,19);
+        this.setCenter(board);
+
+        HBox top = new HBox(new Label());
+        top.setPadding(new Insets(6));
+        top.setBackground(new Background(new BackgroundFill(background, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setTop(top);
+        //bottom letters
+        GridPane letters = new GridPane();
+        letters.setHgap(93);
+        HBox bot = new HBox(letters);
+        bot.setAlignment(Pos.CENTER);
+        bot.setPadding(new Insets(6));
+        char character = 'a';
+        for (int i = 0; i < 8; i++) {
+            Text text = new Text(Character.toString(character));
+            text.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+            text.setFill(Color.WHITE);
+            letters.add(text, i, 0);
+            character+=1;
+        }
+        bot.setBackground(new Background(new BackgroundFill(background, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setBottom(bot);
+        VBox rit = new VBox(new Label("    "));
+        rit.setPadding(new Insets(6));
+        rit.setBackground(new Background(new BackgroundFill(background, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setRight(rit);
+        //left numbers
+        GridPane numbers = new GridPane();
+        numbers.setVgap(82);
+        VBox lef = new VBox(numbers);
+        lef.setPadding(new Insets(6));
+        lef.setAlignment(Pos.CENTER);
+        for (int i = 0; i < 8; i++) {
+            Text text = new Text(Integer.toString(i));
+            text.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+            text.setFill(Color.WHITE);
+            numbers.add(text, 0, i);
+        }
+        lef.setBackground(new Background(new BackgroundFill(background, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.setLeft(lef);
+    }
+
+    /**
+     * Returns the {@code StackPane} board to add more functionality,
+     * such as promotion.
+     * @return the {@code StackPane} object
+     */
+    public StackPane getBoard() {
+        return board;
     }
 
     /**

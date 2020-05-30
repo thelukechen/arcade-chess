@@ -1,7 +1,6 @@
 package arcade.chess;
 
 import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 
 /**
@@ -72,6 +71,7 @@ public class King extends Piece {
             coordinate = 10 * (getX() - getSide()) + (getY() - getSide());
             list.add(coordinate);
         }
+        //array
         int[] array = new int[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
@@ -85,9 +85,10 @@ public class King extends Piece {
      */
     public Image image() {
         if (getColor()) {
-            return new Image("/kingW.png");
+            return new Image("/kingW.png", 80, 80, true, false);
+
         } else {
-            return new Image("/kingB.png");
+            return new Image("/kingB.png", 80, 80, true, false);
         }
     }
 

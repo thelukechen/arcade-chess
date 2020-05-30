@@ -1,7 +1,6 @@
 package arcade.chess;
 
 import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 
 /**
@@ -50,7 +49,7 @@ public class Bishop extends Piece {
             coordinate = 10 * (getX() - (i * getSide())) + (getY() - (i * getSide()));
             list.add(coordinate);
         }
-
+        //array
         int[] array = new int[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
@@ -64,9 +63,9 @@ public class Bishop extends Piece {
      */
     public Image image() {
         if (getColor()) {
-            return new Image("/bishopW.png");
+            return new Image("/bishopW.png", 80, 80, true, false);
         } else {
-            return new Image("/bishopB.png");
+            return new Image("/bishopB.png", 80, 80, true, false);
         }
     }
 

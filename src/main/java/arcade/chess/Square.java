@@ -68,9 +68,9 @@ public class Square extends StackPane {
         //piece taken
         if (!target.getPiece().getType().equals("Empty")) {
             if (target.getPiece().getColor()) {
-                getBoard().app.blackTakes.add(target.getPiece());
+                getBoard().app.black.getTaken().add(target.getPiece());
             } else {
-                getBoard().app.whiteTakes.add(target.getPiece());
+                getBoard().app.white.getTaken().add(target.getPiece());
             }
         }
         //swap
@@ -79,7 +79,7 @@ public class Square extends StackPane {
         target.setPiece(this.getPiece());
         //promotion
         if (checkPromotion(target)) {
-            this.getBoard().app.setScene(new Promotion(getPiece().getColor(), this.getPiece().getCoordinate(), this.getBoard().app));
+            this.getBoard().app.createPromotion(new Promotion(getPiece().getColor(), this.getPiece().getCoordinate(), this.getBoard().app));
         }
         target.getPiece().setFirstMove(false);
         this.setPiece(new Empty(temp / 10, temp % 10));
@@ -106,13 +106,12 @@ public class Square extends StackPane {
             if (pawn.getEnPassant() == target.getCoordinate()) {
                 Square passantSquare = getBoard().squareArr[target.getX()][target.getY() - getPiece().getSide()];
                 if (pawn.getEnPassant() == target.getCoordinate() && passantSquare.getPiece().getColor()) {
-                    this.getBoard().app.blackTakes.add(passantSquare.getPiece());
+                    this.getBoard().app.black.getTaken().add(passantSquare.getPiece());
                 } else {
-                    this.getBoard().app.whiteTakes.add(passantSquare.getPiece());
+                    this.getBoard().app.white.getTaken().add(passantSquare.getPiece());
                 }
                 passantSquare.setPiece(new Empty(passantSquare.getX(), passantSquare.getY()));
                 pawn.setEnPassant(-1);
-                pawn.setJustDoubleMoved(false);
                 return true;
             }
         }
@@ -202,21 +201,7 @@ public class Square extends StackPane {
                     Pawn pawn = (Pawn) this.getBoard().squareArr[i][j].getPiece();
                     pawn.setJustDoubleMoved(false);
                 }
-
             }
         }
-    }
-
-    /**
-     * Creates and immediately starts a new daemon thread that executes
-     * {@code target.run()}. This method, which may be called from any thread,
-     * will return immediately its the caller.
-     * @param target the object whose {@code run} method is invoked when this
-     *               thread is started
-     */
-    public static void runNow(Runnable target) {
-        Thread t = new Thread(target);
-        t.setDaemon(true);
-        t.start();
     }
 }

@@ -1,7 +1,6 @@
 package arcade.chess;
 
 import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 
 /**
@@ -27,7 +26,6 @@ public class Pawn extends Piece {
 
         this.setSide(a ? -1 : 1);
         this.setCoordinate(10 * i + j);
-        this.justDoubleMoved = false;
         this.enPassant = -1;
     }
 
@@ -48,13 +46,16 @@ public class Pawn extends Piece {
             }
         }
         //Up 1
+        int side;
         coordinate = 10 * getX() + (getY() + getSide());
         if (lookVertical(true) > 0 && isInGrid(coordinate)) {
-            list.add(coordinate);
+            side = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getSide();
+            if (side == 0) {
+                list.add(coordinate);
+            }
         }
         //Diagonal Left Take
         coordinate = 10 * (getX() + getSide()) + (getY() + getSide());
-        int side;
         if (lookDiagonal(true, false) == 1 && isInGrid(coordinate)) {
             side = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getSide();
             if (side != this.getSide() && side != 0) {
@@ -71,12 +72,11 @@ public class Pawn extends Piece {
         }
         //En Passant
         addEnPassant(list);
-        //Add elements to array
+        //array
         int[] array = new int[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
         }
-        //System.out.println(array.length);
         this.setPossibleMoves(array);
         return array;
     }
@@ -95,8 +95,6 @@ public class Pawn extends Piece {
                 if (pawn.isJustDoubleMoved()) {
                     list.add(10 * (getX() + getSide()) + (getY() + getSide()));
                     setEnPassant(10 * (getX() + getSide()) + (getY() + getSide()));
-                    //pawn.setJustDoubleMoved(false);
-                    //System.out.println("run left");
                 }
             }
         }
@@ -107,8 +105,6 @@ public class Pawn extends Piece {
                 if (pawn.isJustDoubleMoved()) {
                     list.add(10 * (getX() - getSide()) + (getY() + getSide()));
                     setEnPassant(10 * (getX() - getSide()) + (getY() + getSide()));
-                    //pawn.setJustDoubleMoved(false);
-                    //System.out.println("run right");
                 }
             }
         }
@@ -146,6 +142,9 @@ public class Pawn extends Piece {
      * @param enPassant the specified value
      */
     public void setEnPassant(int enPassant) {
+        if (enPassant == -1) {
+            setJustDoubleMoved(false);
+        }
         this.enPassant = enPassant;
     }
 
@@ -161,9 +160,9 @@ public class Pawn extends Piece {
      */
     public Image image() {
         if (getColor()) {
-            return new Image("/pawnW.png");
+            return new Image("/pawnW.png", 80, 80, true, false);
         } else {
-            return new Image("/pawnB.png");
+            return new Image("/pawnB.png", 80, 80, true, false);
         }
     }
 }

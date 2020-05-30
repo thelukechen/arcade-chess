@@ -1,7 +1,6 @@
 package arcade.chess;
 
 import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 
 /**
@@ -51,7 +50,7 @@ public class Rook extends Piece {
             coordinate = 10 * (getX() + (i * getSide())) + getY();
             list.add(coordinate);
         }
-
+        //array
         int[] array = new int[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
@@ -65,9 +64,9 @@ public class Rook extends Piece {
      */
     public Image image() {
         if (getColor()) {
-            return new Image("/rookW.png");
+            return new Image("/rookW.png", 80, 80, true, false);
         } else {
-            return new Image("/rookB.png");
+            return new Image("/rookB.png", 80, 80, true, false);
         }
     }
 
