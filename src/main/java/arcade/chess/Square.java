@@ -68,11 +68,11 @@ public class Square extends StackPane {
         //piece taken
         if (!target.getPiece().getType().equals("Empty")) {
             if (target.getPiece().getColor()) {
-                getBoard().app.black.getTaken().add(target.getPiece());
-                getBoard().app.black.getTaken().updateDifference(getBoard().app.white.getTaken());
+                getBoard().app.getBlack().getTaken().add(target.getPiece());
+                getBoard().app.getBlack().getTaken().updateDifference(getBoard().app.getWhite().getTaken());
             } else {
-                getBoard().app.white.getTaken().add(target.getPiece());
-                getBoard().app.white.getTaken().updateDifference(getBoard().app.black.getTaken());
+                getBoard().app.getWhite().getTaken().add(target.getPiece());
+                getBoard().app.getWhite().getTaken().updateDifference(getBoard().app.getBlack().getTaken());
             }
         }
         //swap
@@ -108,11 +108,11 @@ public class Square extends StackPane {
             if (pawn.getEnPassant() == target.getCoordinate()) {
                 Square passantSquare = getBoard().squareArr[target.getX()][target.getY() - getPiece().getSide()];
                 if (pawn.getEnPassant() == target.getCoordinate() && passantSquare.getPiece().getColor()) {
-                    this.getBoard().app.black.getTaken().add(passantSquare.getPiece());
-                    getBoard().app.black.getTaken().updateDifference(getBoard().app.white.getTaken());
+                    this.getBoard().app.getBlack().getTaken().add(passantSquare.getPiece());
+                    getBoard().app.getBlack().getTaken().updateDifference(getBoard().app.getWhite().getTaken());
                 } else {
-                    this.getBoard().app.white.getTaken().add(passantSquare.getPiece());
-                    getBoard().app.white.getTaken().updateDifference(getBoard().app.black.getTaken());
+                    this.getBoard().app.getWhite().getTaken().add(passantSquare.getPiece());
+                    getBoard().app.getWhite().getTaken().updateDifference(getBoard().app.getBlack().getTaken());
                 }
                 passantSquare.setPiece(new Empty(passantSquare.getX(), passantSquare.getY()));
                 pawn.setEnPassant(-1);

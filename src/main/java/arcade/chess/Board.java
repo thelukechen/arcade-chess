@@ -16,7 +16,7 @@ import javafx.scene.text.Text;
  */
 public class Board extends BorderPane {
 
-    private final StackPane board;
+    private final StackPane stack;
     private boolean firstClick = false;
     private Square squareClicked;
     private int whoseTurn = -1;
@@ -32,7 +32,7 @@ public class Board extends BorderPane {
     public Board() {
         super();
         GridPane grid = new GridPane();
-        board = new StackPane();
+        stack = new StackPane();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Square square;
@@ -82,11 +82,11 @@ public class Board extends BorderPane {
                 grid.add(squareArr[i][j], i, j);
             }
         }
-        board.getChildren().add(grid);
-        board.setMinSize(50, 50);
+        stack.getChildren().add(grid);
+        stack.setMinSize(50, 50);
         //board.setHeight(this.getWidth());
         Color background = Color.rgb(139,69,19);
-        this.setCenter(board);
+        this.setCenter(stack);
 
         HBox top = new HBox(new Label());
         top.setPadding(new Insets(6));
@@ -133,8 +133,8 @@ public class Board extends BorderPane {
      * such as promotion.
      * @return the {@code StackPane} object
      */
-    public StackPane getBoard() {
-        return board;
+    public StackPane getStack() {
+        return stack;
     }
 
     /**

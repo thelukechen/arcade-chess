@@ -10,20 +10,17 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    Board board;
-    VBox vbox;
-    Stage stage;
-    Dock white;
-    Dock black;
+    private Board board;
+    private Dock white;
+    private Dock black;
 
     @Override
     public void start(Stage stage) {
 
-        this.stage = stage;
-        vbox = new VBox();
+        VBox vbox = new VBox();
+
         board = new Board();
         board.setApp(this);
-
         white = new Dock(true);
         white.setApp(this);
         black = new Dock(false);
@@ -32,11 +29,23 @@ public class App extends Application {
         vbox.getChildren().addAll(black, board, white);
 
         Scene scene = new Scene(vbox);
-        this.stage.setTitle("Chess Application");
-        this.stage.setResizable(true);
-        this.stage.setScene(scene);
-        this.stage.sizeToScene();
-        this.stage.show();
+        stage.setTitle("Chess Application");
+        stage.setResizable(true);
+        stage.setScene(scene);
+        stage.sizeToScene();
+        stage.show();
+    }
+
+    public Board getBoard() {
+        return this.board;
+    }
+
+    public Dock getWhite() {
+        return this.white;
+    }
+
+    public Dock getBlack() {
+        return this.black;
     }
 
     public static void main(String[] args ) {
@@ -48,6 +57,6 @@ public class App extends Application {
      * @param promotion the {@code Promotion} object
      */
     public void createPromotion(Promotion promotion) {
-        this.board.getBoard().getChildren().add(promotion);
+        this.board.getStack().getChildren().add(promotion);
     }
 }

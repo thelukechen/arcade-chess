@@ -17,11 +17,11 @@ import java.util.HashMap;
 public class TakenGrid extends GridPane {
 
     private App app;
-    private ArrayList<Piece> piecesTaken = new ArrayList<>();
+    private final ArrayList<Piece> piecesTaken = new ArrayList<>();
     private int count;
     private final boolean color;
     private Label value;
-    HashMap<String, Integer> pieceValues;
+    private final HashMap<String, Integer> pieceValues;
 
     /**
      * Constructs a {@code TakenGrid} object with
@@ -61,7 +61,6 @@ public class TakenGrid extends GridPane {
         iv.setFitHeight(40);
         iv.setFitWidth(40);
         piecesTaken.add(piece);
-        System.out.println("array length" + piecesTaken.size());
         this.getChildren().remove(count);
         this.add(iv, count, 0);
         this.add(value, count + 1, 0);
@@ -84,10 +83,11 @@ public class TakenGrid extends GridPane {
         return this.app;
     }
 
-    public ArrayList<Piece> getPiecesTaken() {
-        return this.piecesTaken;
-    }
-
+    /**
+     * Updates the {@code Piece} value difference of which side
+     * contains a higher value.
+     * @param other the other {@code TakenGrid}
+     */
     public void updateDifference(TakenGrid other) {
         int thisDock = 0;
         int otherDock = 0;

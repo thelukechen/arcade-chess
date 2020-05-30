@@ -69,12 +69,12 @@ public class Promotion extends HBox {
         Button button = (Button) ae.getSource();
         for (Piece e : pieces) {
             if (e.getType().equals(button.getText())) {
-                Square square = this.app.board.squareArr[coordinates / 10][coordinates % 10];
+                Square square = this.app.getBoard().squareArr[coordinates / 10][coordinates % 10];
                 square.setPiece(e);
                 square.getPiece().setSquare(square);
                 break;
             }
         }
-        this.app.board.getBoard().getChildren().remove(1);
+        this.app.getBoard().getStack().getChildren().remove(1);
     }
 }
