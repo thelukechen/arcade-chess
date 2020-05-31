@@ -186,4 +186,8 @@ public class Board extends BorderPane {
     public void setApp(App app) {
         this.app = app;
     }
+
+    public boolean getWhoseTurn() {
+        return whoseTurn == -1;
+    }
 }
