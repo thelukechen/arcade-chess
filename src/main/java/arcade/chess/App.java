@@ -18,8 +18,6 @@ public class App extends Application {
     private Dock black;
     private MenuBar bar;
     private Menu game;
-    private MenuItem draw;
-    private MenuItem resign;
     private ForceStop forceStop;
 
     @Override
@@ -32,16 +30,20 @@ public class App extends Application {
         white.setApp(this);
         black = new Dock(false);
         black.setApp(this);
+        Welcome welcome = new Welcome();
+        welcome.setApp(this);
+        this.getBoard().getStack().getChildren().add(welcome);
 
         bar = new MenuBar();
         Menu file = new Menu("File");
         MenuItem quit = new MenuItem("Quit");
+        quit.setOnAction(e -> System.exit(0));
         MenuItem about = new MenuItem("About");
         file.getItems().addAll(about, quit);
         game = new Menu("Game");
         bar.getMenus().addAll(file, game);
-        draw = new MenuItem("Draw");
-        resign = new MenuItem("Resign");
+        MenuItem draw = new MenuItem("Draw");
+        MenuItem resign = new MenuItem("Resign");
         game.getItems().addAll(draw, resign);
         draw.setOnAction(e -> {
             forceStop = new ForceStop(this.getBoard().getWhoseTurn(), true);
