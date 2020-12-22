@@ -1,6 +1,7 @@
 package arcade.chess;
 
 import javafx.scene.image.Image;
+import java.util.ArrayList;
 
 /**
  * Abstract class for all {@code Piece} objects.
@@ -15,8 +16,7 @@ public abstract class Piece {
     private int y;
     private int coordinate;
     private Square square;
-    private int side;
-    private boolean color;
+    private byte color;
     private int[] possibleMoves;
 
     /**
@@ -29,14 +29,34 @@ public abstract class Piece {
      * Returns the {@code String} of the {@code Piece} object.
      * @return the type of {@code Piece}
      */
-    public abstract String getType();
+    public abstract char getType();
 
     /**
      * Returns an integer array of coordinates
      * of all possible moves currently available.
-     * @return the list of all possible moves
      */
-    public abstract int[] possibleMoves();
+    public abstract void possibleMoves();
+
+    public boolean getPossibleMoves() {
+        possibleMoves();
+        if (possibleMoves.length == 0) {
+            System.out.println("No moves available for piece on " + coordinate);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Sets the integer array of possible moves for the {@code Piece}.
+     * @param list the specified integer arraylist
+     */
+    public void setPossibleMoves(ArrayList<Integer> list) {
+        int[] array = new int[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = list.get(i);
+        }
+        this.possibleMoves = array;
+    }
 
     /**
      * Returns if the following piece is capable of
@@ -45,7 +65,7 @@ public abstract class Piece {
      * @return true if allowed to make move
      */
     public boolean isValidMove(Square target) {
-        for (int e : getPossibleMoves()) {
+        for (int e : possibleMoves) {
             if (target.getCoordinate() == e) {
                 return true;
             }
@@ -64,8 +84,10 @@ public abstract class Piece {
         int upOrDown = up ? 1 : -1;
         for (int i = 1; i < 8; i++) {
             try {
-                Square square = this.getSquare().getBoard().squareArr[getX()][getY() + (upOrDown * (i * side))];
-                if (square.getPiece().getType().equals("Empty")) {
+                Square square = this.getSquare().getBoard().squareArr[getX()][getY() + (upOrDown * (i * color))];
+                if (!isInGrid(square.getCoordinate())) {
+                    return value;
+                } else if (square.getPiece().getType() == 'E') {
                     value++;
                 } else if (square.getPiece().getColor() != this.getColor()) {
                     value++;
@@ -91,8 +113,10 @@ public abstract class Piece {
         int leftOrRight = right ? -1 : 1;
         for (int i = 1; i < 8; i++) {
             try {
-                Square square = this.getSquare().getBoard().squareArr[getX() + (leftOrRight * (i * side))][getY()];
-                if (square.getPiece().getType().equals("Empty")) {
+                Square square = this.getSquare().getBoard().squareArr[getX() + (leftOrRight * (i * color))][getY()];
+                if (!isInGrid(square.getCoordinate())) {
+                    return value;
+                } else if (square.getPiece().getType() == 'E') {
                     value++;
                 } else if (square.getPiece().getColor() != this.getColor()) {
                     value++;
@@ -121,12 +145,14 @@ public abstract class Piece {
             try {
                 Square square;
                 if (up) {
-                    square = this.getSquare().getBoard().squareArr[getX() - (rightOrLeft * (i * side))][getY() + (i * side)];
+                    square = this.getSquare().getBoard().squareArr[getX() - (rightOrLeft * (i * color))][getY() + (i * color)];
                 } else {
                     rightOrLeft = right ? -1 : 1;
-                    square = this.getSquare().getBoard().squareArr[getX() + (rightOrLeft * (i * side))][getY() - (i * side)];
+                    square = this.getSquare().getBoard().squareArr[getX() + (rightOrLeft * (i * color))][getY() - (i * color)];
                 }
-                if (square.getPiece().getType().equals("Empty")) {
+                if (!isInGrid(square.getCoordinate())) {
+                    return value;
+                } else if (square.getPiece().getType() == 'E') {
                     value++;
                 } else if (square.getPiece().getColor() != this.getColor()) {
                     value++;
@@ -139,6 +165,55 @@ public abstract class Piece {
             }
         }
         return value;
+    }
+
+    public void addD(boolean up, boolean right, ArrayList<Integer> list) {
+        int counter1 = right ? -1 : 1;
+        if (getType() == 'P') { //pawn take
+            int coord = 10 * (getX() + (counter1 * getColor())) + (getY() + getColor());
+            if (lookDiagonal(true, right) == 1) {
+                if (getSquare().getBoard().squareArr[coord / 10][coord % 10].getPiece().getColor() * -1 == getColor()) {
+                    list.add(coord);
+                }
+            }
+        } else {
+            int counter2 = up ? 1 : -1;
+            if (getType() == 'K') { //king
+                if (lookDiagonal(up, right) > 0) {
+                    list.add(10 * (getX() + (counter1) * getColor()) + (getY() + (counter2) * getColor()));
+                }
+            } else { //every other piece
+                for (int i = 1; i <= lookDiagonal(up, right); i++) {
+                    list.add(10 * (getX() + (counter1) * (i * getColor())) + (getY() + (counter2) * (i * getColor())));
+                }
+            }
+        }
+    }
+
+    public void addV(boolean up, ArrayList<Integer> list) {
+        int counter = up ? 1 : -1;
+        if (getType() == 'K') { //king
+            if (lookVertical(up) > 0) {
+                list.add(10 * getX() + (getY() + (counter) * getColor()));
+            }
+        } else { //every other piece
+            for (int i = 1; i <= lookVertical(up); i++) {
+                list.add(10 * getX() + (getY() + (counter) * (i * getColor())));
+            }
+        }
+    }
+
+    public void addH(boolean right, ArrayList<Integer> list) {
+        int counter = right ? -1 : 1;
+        if (getType() == 'K') { //king
+            if (lookHorizontal(right) > 0) {
+                list.add(10 * (getX() + (counter) * getColor()) + getY());
+            }
+        } else {
+            for (int i= 1; i <= lookHorizontal(right); i++) {
+                list.add(10 * (getX() + (counter) * (i * getColor())) + getY());
+            }
+        }
     }
 
     /**
@@ -157,54 +232,19 @@ public abstract class Piece {
     }
 
     /**
-     * Returns the integer array of possible moves for the {@code Piece}.
-     * @return integer array of possible moves
+     * Returns the {@code color} value of the {@code Piece}.
+     * @return the color
      */
-    public int[] getPossibleMoves() {
-        return this.possibleMoves;
-    }
-
-    /**
-     * Sets the integer array of possible moves for the {@code Piece}.
-     * @param possibleMoves the specified integer array
-     */
-    public void setPossibleMoves(int[] possibleMoves) {
-        this.possibleMoves = possibleMoves;
-    }
-
-    /**
-     * Returns the color of the chess {@code Piece}.
-     * @return true if white, false if black
-     */
-    public boolean getColor() {
+    public byte getColor() {
         return this.color;
     }
 
     /**
-     * Sets the color of the {@code Piece}.
-     * Also sets the side value: -1 for white, 1 for black.
-     * @param color the specified {@code Piece} color
+     * Sets the {@code color} value of the {@code Piece}.
+     * @param color the specified {@code side} value
      */
-    public void setColor(boolean color) {
+    public void setColor(byte color) {
         this.color = color;
-        side = color ? -1 : 1;
-    }
-
-    /**
-     * Returns the {@code side} value.
-     * @return the side
-     */
-    public int getSide() {
-        return this.side;
-    }
-
-    /**
-     * Sets the side value.
-     * @param side the specified {@code side} value
-     */
-    public void setSide(int side) {
-        this.color = side == -1;
-        this.side = side;
     }
 
     /**

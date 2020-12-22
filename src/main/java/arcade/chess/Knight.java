@@ -18,53 +18,46 @@ public class Knight extends Piece {
      */
     public Knight(boolean a, int i, int j) {
         super();
-
-        this.setSide(a ? -1 : 1);
-        this.setCoordinate(10 * i + j);
+        setColor((byte) (a ? -1 : 1));
+        setCoordinate(10 * i + j);
     }
 
     /**
      * {@inheritDoc}
      * Finds if the {@code Knight} can move.
      */
-    public int[] possibleMoves() {
+    public void possibleMoves() {
         ArrayList<Integer> list = new ArrayList<>();
         int coordinate;
         int[] one = new int[] {1, -1};
         for (Integer e : one) {
             for (Integer i : one) {
                 //all Ls
-                coordinate = 10 * (getX() - (e * getSide())) + (getY() + (i * (2 * getSide())));
+                coordinate = 10 * (getX() - (e * getColor())) + (getY() + (i * (2 * getColor())));
                 if (isInGrid(coordinate)) {
-                    Square square = this.getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10];
-                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                    Square square = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10];
+                    if (square.getPiece().getColor() != this.getColor()) {
                         list.add(coordinate);
                     }
                 }
                 //all guns
-                coordinate = 10 * (getX() - (e * (2 * getSide()))) + (getY() + (i * getSide()));
+                coordinate = 10 * (getX() - (e * (2 * getColor()))) + (getY() + (i * getColor()));
                 if (isInGrid(coordinate)) {
-                    Square square = this.getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10];
-                    if (square.getPiece().getType().equals("Empty") || square.getPiece().getColor() != this.getColor()) {
+                    Square square = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10];
+                    if (square.getPiece().getColor() != this.getColor()) {
                         list.add(coordinate);
                     }
                 }
             }
         }
-        //array
-        int[] array = new int[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-        this.setPossibleMoves(array);
-        return array;
+        this.setPossibleMoves(list);
     }
 
     /**
      * {@inheritDoc}
      */
     public Image image() {
-        if (getColor()) {
+        if (getColor() == -1) {
             return new Image("/knightW.png", 80, 80, true, false);
         } else {
             return new Image("/knightB.png", 80, 80, true, false);
@@ -74,7 +67,7 @@ public class Knight extends Piece {
     /**
      * {@inheritDoc}
      */
-    public String getType() {
-        return "Knight";
+    public char getType() {
+        return 'N';
     }
 }

@@ -4,7 +4,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -17,9 +24,9 @@ import javafx.scene.text.Text;
 public class Board extends BorderPane {
 
     private final StackPane stack;
-    private boolean firstClick = false;
-    private Square squareClicked;
-    private int whoseTurn = -1;
+    private boolean firstClick = true;
+    private byte color = -1;
+    private Square source;
 
     App app;
     Square[][] squareArr = new Square[8][8];
@@ -85,9 +92,48 @@ public class Board extends BorderPane {
         stack.getChildren().add(grid);
         stack.setMinSize(50, 50);
         //board.setHeight(this.getWidth());
-        Color background = Color.rgb(139,69,19);
         this.setCenter(stack);
 
+        restOfBoard();
+    }
+
+    /**
+     * MouseEvent handler for clicking on the chess {@code Pieces}.
+     * Also includes game logic and calls the {@link Square} {@code moveTo}
+     * method.
+     * @param e the mouse event
+     */
+    public void click(MouseEvent e) {
+        if (firstClick) {
+            source = (Square) e.getSource();
+            if (source.getPiece().getColor() == color) {
+                if (source.getPiece().getPossibleMoves()) {
+                    firstClick = false;
+                }
+            } else if (source.getPiece().getColor() - color == 2) {
+                System.out.println("It is white's turn.");
+            } else if (source.getPiece().getColor() - color == -2) {
+                System.out.println("It is black's turn.");
+            }
+        } else {
+            Square target = (Square) e.getSource();
+            if (color == target.getPiece().getColor()) {
+                source = target;
+                source.getPiece().getPossibleMoves();
+            } else {
+                if (source.getPiece().isValidMove(target)) {
+                    source.moveTo(target);
+                    color = (byte) (color == 1 ? -1 : 1);
+                } else {
+                    System.out.println("Invalid Move.");
+                }
+                firstClick = true;
+            }
+        }
+    }
+
+    public void restOfBoard() {
+        Color background = Color.rgb(139,69,19);
         HBox top = new HBox(new Label());
         top.setPadding(new Insets(6));
         top.setBackground(new Background(new BackgroundFill(background, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -138,48 +184,6 @@ public class Board extends BorderPane {
     }
 
     /**
-     * MouseEvent handler for clicking on the chess {@code Pieces}.
-     * Also includes game logic and calls the {@link Square} {@code moveTo}
-     * method.
-     * @param e the mouse event
-     */
-    public void click(MouseEvent e) {
-        if (!firstClick) {
-            // first click
-            squareClicked = (Square) e.getSource();
-            if (whoseTurn != squareClicked.getPiece().getSide() && !squareClicked.getPiece().getType().equals("Empty")) {
-                if (whoseTurn == -1) {
-                    System.out.println("It is white's turn.");
-                } else {
-                    System.out.println("It is blacks's turn.");
-                }
-            } else if (squareClicked.getPiece().getType().equals("Empty")) {
-                firstClick = false;
-            } else if (squareClicked.getPiece().possibleMoves().length == 0) {
-                System.out.println("No Moves Available");
-            } else {
-                firstClick = true;
-            }
-        } else {
-            // second click
-            Square target = (Square) e.getSource();
-            if (squareClicked.getPiece().getSide() == target.getPiece().getSide()) {
-                squareClicked = target;
-                squareClicked.getPiece().possibleMoves();
-            } else if (squareClicked.getCoordinate() == target.getCoordinate()) { //for if u click on the same piece
-                firstClick = false;
-            } else if (squareClicked.getPiece().isValidMove(target)) {
-                squareClicked.moveTo(target);
-                whoseTurn = whoseTurn == -1 ? 1 : -1;
-                firstClick = false;
-            } else if (squareClicked.getCoordinate() != target.getCoordinate()) { //for if u click on the same piece
-                System.out.println("Invalid Move");
-                firstClick = false;
-            }
-        }
-    }
-
-    /**
      * Sets the specified app to this
      * @param app the specified app
      */
@@ -187,7 +191,7 @@ public class Board extends BorderPane {
         this.app = app;
     }
 
-    public boolean getWhoseTurn() {
-        return whoseTurn == -1;
+    public byte getColor() {
+        return color;
     }
 }

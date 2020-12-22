@@ -17,9 +17,8 @@ public class Queen extends Piece {
      */
     public Queen(boolean a, int i, int j) {
         super();
-
-        this.setSide(a ? -1 : 1);
-        this.setCoordinate(10 * i + j);
+        setColor((byte) (a ? -1 : 1));
+        setCoordinate(10 * i + j);
     }
 
     /**
@@ -27,63 +26,24 @@ public class Queen extends Piece {
      * Finds if the {@code Queen} can move vertically
      * , horizontally, and diagonally.
      */
-    public int[] possibleMoves() {
+    public void possibleMoves() {
         ArrayList<Integer> list = new ArrayList<>();
-        int coordinate;
-        //up
-        for (int i = 1; i <= lookVertical(true); i++) {
-            coordinate = 10 * getX() + (getY() + (i * getSide()));
-            list.add(coordinate);
-        }
-        //down
-        for (int i = 1; i <= lookVertical(false); i++) {
-            coordinate = 10 * getX() + (getY() - (i * getSide()));
-            list.add(coordinate);
-        }
-        //right
-        for (int i = 1; i <= lookHorizontal(true); i++) {
-            coordinate = 10 * (getX() - (i * getSide())) + getY();
-            list.add(coordinate);
-        }
-        //left
-        for (int i = 1; i <= lookHorizontal(false); i++) {
-            coordinate = 10 * (getX() + (i * getSide())) + getY();
-            list.add(coordinate);
-        }
-        //up the positive diagonal
-        for (int i = 1; i <= lookDiagonal(true, true); i++) {
-            coordinate = 10 * (getX() - (i * getSide())) + (getY() + (i * getSide()));
-            list.add(coordinate);
-        }
-        //down the positive diagonal
-        for (int i = 1; i <= lookDiagonal(false, false); i++) {
-            coordinate = 10 * (getX() + (i * getSide())) + (getY() - (i * getSide()));
-            list.add(coordinate);
-        }
-        //up the negative diagonal
-        for (int i = 1; i <= lookDiagonal(true, false); i++) {
-            coordinate = 10 * (getX() + (i * getSide())) + (getY() + (i * getSide()));
-            list.add(coordinate);
-        }
-        //down the negative diagonal
-        for (int i = 1; i <= lookDiagonal(false, true); i++) {
-            coordinate = 10 * (getX() - (i * getSide())) + (getY() - (i * getSide()));
-            list.add(coordinate);
-        }
-        //array
-        int[] array = new int[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-        this.setPossibleMoves(array);
-        return array;
+        addV(true, list);
+        addV(false, list);
+        addH(true, list);
+        addH(false, list);
+        addD(true, true, list); //up positive diagonal
+        addD(false, false, list); //down positive diagonal
+        addD(true, false, list); //up negative diagonal
+        addD(false, true, list); //down negative diagonal
+        this.setPossibleMoves(list);
     }
 
     /**
      * {@inheritDoc}
      */
     public Image image() {
-        if (getColor()) {
+        if (getColor() == -1) {
             return new Image("/queenW.png", 80, 80, true, false);
         } else {
             return new Image("/queenB.png", 80, 80, true, false);
@@ -93,7 +53,7 @@ public class Queen extends Piece {
     /**
      * {@inheritDoc}
      */
-    public String getType() {
-        return "Queen";
+    public char getType() {
+        return 'Q';
     }
 }

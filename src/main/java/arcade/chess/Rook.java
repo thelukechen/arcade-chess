@@ -17,9 +17,8 @@ public class Rook extends Piece {
      */
     public Rook(boolean a, int i, int j) {
         super();
-
-        this.setSide(a ? -1 : 1);
-        this.setCoordinate(10 * i + j);
+        setColor((byte) (a ? -1 : 1));
+        setCoordinate(10 * i + j);
     }
 
     /**
@@ -27,43 +26,20 @@ public class Rook extends Piece {
      * Finds if the {@code Rook} can move vertically
      * and horizontally.
      */
-    public int[] possibleMoves() {
+    public void possibleMoves() {
         ArrayList<Integer> list = new ArrayList<>();
-        int coordinate;
-        //up
-        for (int i = 1; i <= lookVertical(true); i++) {
-            coordinate = 10 * getX() + (getY() + (i * getSide()));
-            list.add(coordinate);
-        }
-        //down
-        for (int i = 1; i <= lookVertical(false); i++) {
-            coordinate = 10 * getX() + (getY() - (i * getSide()));
-            list.add(coordinate);
-        }
-        //right
-        for (int i = 1; i <= lookHorizontal(true); i++) {
-            coordinate = 10 * (getX() - (i * getSide())) + getY();
-            list.add(coordinate);
-        }
-        //left
-        for (int i = 1; i <= lookHorizontal(false); i++) {
-            coordinate = 10 * (getX() + (i * getSide())) + getY();
-            list.add(coordinate);
-        }
-        //array
-        int[] array = new int[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-        this.setPossibleMoves(array);
-        return array;
+        addV(true, list);
+        addV(false, list);
+        addH(true, list);
+        addH(false, list);
+        this.setPossibleMoves(list);
     }
 
     /**
      * {@inheritDoc}
      */
     public Image image() {
-        if (getColor()) {
+        if (getColor() == -1) {
             return new Image("/rookW.png", 80, 80, true, false);
         } else {
             return new Image("/rookB.png", 80, 80, true, false);
@@ -73,7 +49,7 @@ public class Rook extends Piece {
     /**
      * {@inheritDoc}
      */
-    public String getType() {
-        return "Rook";
+    public char getType() {
+        return 'R';
     }
 }

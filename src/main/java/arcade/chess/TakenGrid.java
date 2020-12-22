@@ -21,7 +21,7 @@ public class TakenGrid extends GridPane {
     private int count;
     private final boolean color;
     private Label value;
-    private final HashMap<String, Integer> pieceValues;
+    private final HashMap<Character, Integer> pieceValues;
 
     /**
      * Constructs a {@code TakenGrid} object with
@@ -30,11 +30,11 @@ public class TakenGrid extends GridPane {
     public TakenGrid(boolean color) {
         this.color = color;
         pieceValues = new HashMap<>();
-        pieceValues.put("Pawn", 1);
-        pieceValues.put("Knight", 3);
-        pieceValues.put("Bishop", 3);
-        pieceValues.put("Rook", 5);
-        pieceValues.put("Queen", 9);
+        pieceValues.put('P', 1);
+        pieceValues.put('N', 3);
+        pieceValues.put('B', 3);
+        pieceValues.put('R', 5);
+        pieceValues.put('Q', 9);
         value = new Label("");
         value.setTextFill(Color.WHITE);
         value.setPrefSize(40, 40);

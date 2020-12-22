@@ -38,7 +38,7 @@ public class Promotion extends HBox {
         pieces[3] = new Bishop(a, coordinates / 10, coordinates % 10);
         Button[] buttons = new Button[4];
         for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = new Button(pieces[i].getType());
+            buttons[i] = new Button(pieces[i].getType() + "");
             buttons[i].setGraphic(new ImageView(pieces[i].image()));
             buttons[i].setOnAction(this::updatePawn);
             buttons[i].setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -68,7 +68,7 @@ public class Promotion extends HBox {
     public void updatePawn(ActionEvent ae) {
         Button button = (Button) ae.getSource();
         for (Piece e : pieces) {
-            if (e.getType().equals(button.getText())) {
+            if (e.getType() == button.getText().charAt(0)) {
                 Square square = this.app.getBoard().squareArr[coordinates / 10][coordinates % 10];
                 square.setPiece(e);
                 square.getPiece().setSquare(square);

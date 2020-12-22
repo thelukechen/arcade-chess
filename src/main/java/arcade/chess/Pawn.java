@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 public class Pawn extends Piece {
 
-    private boolean justDoubleMoved;
-    private int enPassant;
+    private boolean justDoubleMoved = false;
+    private int enPassant = -1;
 
     /**
      * Constructs a {@code Piece} object with a certain color
@@ -23,10 +23,8 @@ public class Pawn extends Piece {
      */
     public Pawn(boolean a, int i, int j) {
         super();
-
-        this.setSide(a ? -1 : 1);
-        this.setCoordinate(10 * i + j);
-        this.enPassant = -1;
+        setColor((byte) (a ? -1 : 1));
+        setCoordinate(10 * i + j);
     }
 
     /**
@@ -35,50 +33,25 @@ public class Pawn extends Piece {
      * take diagonally left, take diagonally right, or
      * is able to en passant.
      */
-    public int[] possibleMoves() {
+    public void possibleMoves() {
         ArrayList<Integer> list = new ArrayList<>();
         int coordinate;
-        //Up 2
-        if (isFirstMove()) {
-            coordinate = 10 * getX() + (getY() + (2 * getSide()));
-            if (lookVertical(true) > 2 && isInGrid(coordinate)) {
+        if (isFirstMove()) { //double move
+            coordinate = 10 * getX() + (getY() + (2 * getColor()));
+            if (lookVertical(true) > 2) {
                 list.add(coordinate);
             }
         }
-        //Up 1
-        int side;
-        coordinate = 10 * getX() + (getY() + getSide());
-        if (lookVertical(true) > 0 && isInGrid(coordinate)) {
-            side = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getSide();
-            if (side == 0) {
+        coordinate = 10 * getX() + (getY() + getColor());
+        if (lookVertical(true) > 0) { //up one
+            if (getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getColor() == 0) {
                 list.add(coordinate);
             }
         }
-        //Diagonal Left Take
-        coordinate = 10 * (getX() + getSide()) + (getY() + getSide());
-        if (lookDiagonal(true, false) == 1 && isInGrid(coordinate)) {
-            side = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getSide();
-            if (side != this.getSide() && side != 0) {
-                list.add(coordinate);
-            }
-        }
-        //Diagonal Right Take
-        coordinate = 10 * (getX() - getSide()) + (getY() + getSide());
-        if (lookDiagonal(true, true) == 1 && isInGrid(coordinate)) {
-            side = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getSide();
-            if (side != this.getSide() && side != 0) {
-                list.add(coordinate);
-            }
-        }
-        //En Passant
-        addEnPassant(list);
-        //array
-        int[] array = new int[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-        this.setPossibleMoves(array);
-        return array;
+        addD(false, true, list); //right take
+        addD(false, false, list); //left take
+        addEnPassant(list); //en passant
+        this.setPossibleMoves(list);
     }
 
     /**
@@ -87,29 +60,23 @@ public class Pawn extends Piece {
      * @param list the arraylist in {@code possibleMoves}
      */
     public void addEnPassant(ArrayList<Integer> list) {
-        Piece piece;
-        if (lookHorizontal(false) == 1 && isInGrid((10 * (getX() + getSide())) + getY())) {
-            piece = getSquare().getBoard().squareArr[getX() + getSide()][getY()].getPiece();
-            if ((piece.getColor() != getColor()) && piece.getType().equals("Pawn")) {
-                Pawn pawn = (Pawn) piece;
-                if (pawn.isJustDoubleMoved()) {
-                    list.add(10 * (getX() + getSide()) + (getY() + getSide()));
-                    setEnPassant(10 * (getX() + getSide()) + (getY() + getSide()));
-                }
+        for (int i = -1; i <= 1; i++) {
+            if (i == 0) {
+                continue;
             }
-        }
-        if (lookHorizontal(true) == 1 && isInGrid((10 * (getX() - getSide())) + getY())) {
-            piece = getSquare().getBoard().squareArr[getX() - getSide()][getY()].getPiece();
-            if ((piece.getColor() != getColor()) && piece.getType().equals("Pawn")) {
-                Pawn pawn = (Pawn) piece;
-                if (pawn.isJustDoubleMoved()) {
-                    list.add(10 * (getX() - getSide()) + (getY() + getSide()));
-                    setEnPassant(10 * (getX() - getSide()) + (getY() + getSide()));
+            boolean right = i == -1;
+            if (lookHorizontal(right) == 1) {
+                Piece piece = getSquare().getBoard().squareArr[getX() + i * getColor()][getY()].getPiece();
+                if ((piece.getColor() * -1 == getColor()) && piece.getType() == 'P') {
+                    Pawn pawn = (Pawn) piece;
+                    if (pawn.isJustDoubleMoved()) {
+                        list.add(10 * (getX() + i * getColor()) + (getY() + getColor()));
+                        setEnPassant(10 * (getX() + i * getColor()) + (getY() + getColor()));
+                    }
                 }
             }
         }
     }
-
     /**
      * Returns in the {@code Pawn} has just double moved.
      * @return true if it just double moved, false otherwise
@@ -151,15 +118,15 @@ public class Pawn extends Piece {
     /**
      * {@inheritDoc}
      */
-    public String getType() {
-        return "Pawn";
+    public char getType() {
+        return 'P';
     }
 
     /**
      * {@inheritDoc}
      */
     public Image image() {
-        if (getColor()) {
+        if (getColor() == -1) {
             return new Image("/pawnW.png", 80, 80, true, false);
         } else {
             return new Image("/pawnB.png", 80, 80, true, false);

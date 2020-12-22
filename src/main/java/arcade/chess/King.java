@@ -18,9 +18,8 @@ public class King extends Piece {
      */
     public King(boolean a, int i, int j) {
         super();
-
-        this.setSide(a ? -1 : 1);
-        this.setCoordinate(10 * i + j);
+        setColor((byte) (a ? -1 : 1));
+        setCoordinate(10 * i + j);
     }
 
     /**
@@ -28,63 +27,24 @@ public class King extends Piece {
      * Finds if the {@code King} can move one step
      * vertically, horizontally, and diagonally.
      */
-    public int[] possibleMoves() {
+    public void possibleMoves() {
         ArrayList<Integer> list = new ArrayList<>();
-        int coordinate;
-        //up
-        if (lookVertical(true) > 0) {
-            coordinate = 10 * getX() + (getY() + getSide());
-            list.add(coordinate);
-        }
-        //down
-        if (lookVertical(false) > 0) {
-            coordinate = 10 * getX() + (getY() - getSide());
-            list.add(coordinate);
-        }
-        //right
-        if (lookHorizontal(true) > 0) {
-            coordinate = 10 * (getX() - getSide()) + getY();
-            list.add(coordinate);
-        }
-        //left
-        if (lookHorizontal(false) > 0) {
-            coordinate = 10 * (getX() + getSide()) + getY();
-            list.add(coordinate);
-        }
-        //up the positive diagonal
-        if (lookDiagonal(true, true) > 0) {
-            coordinate = 10 * (getX() - getSide()) + (getY() + getSide());
-            list.add(coordinate);
-        }
-        //down the positive diagonal
-        if (lookDiagonal(false, false) > 0) {
-            coordinate = 10 * (getX() + getSide()) + (getY() - getSide());
-            list.add(coordinate);
-        }
-        //up the negative diagonal
-        if (lookDiagonal(true, false) > 0) {
-            coordinate = 10 * (getX() + getSide()) + (getY() + getSide());
-            list.add(coordinate);
-        }
-        //down the negative diagonal
-        if (lookDiagonal(false, true) > 0) {
-            coordinate = 10 * (getX() - getSide()) + (getY() - getSide());
-            list.add(coordinate);
-        }
-        //array
-        int[] array = new int[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-        this.setPossibleMoves(array);
-        return array;
+        addV(true, list);
+        addV(false, list);
+        addH(true, list);
+        addH(false, list);
+        addD(true, true, list);
+        addD(false, false, list);
+        addD(true, false, list);
+        addD(false, true, list);
+        this.setPossibleMoves(list);
     }
 
     /**
      * {@inheritDoc}
      */
     public Image image() {
-        if (getColor()) {
+        if (getColor() == -1) {
             return new Image("/kingW.png", 80, 80, true, false);
 
         } else {
@@ -95,7 +55,7 @@ public class King extends Piece {
     /**
      * {@inheritDoc}
      */
-    public String getType() {
-        return "King";
+    public char getType() {
+        return 'K';
     }
 }

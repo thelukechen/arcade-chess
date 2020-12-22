@@ -14,17 +14,15 @@ public class Empty extends Piece {
      */
     public Empty(int i, int j) {
         setCoordinate(10 * i + j);
-        this.setSide(0);
+        setColor((byte) 0);
     }
 
     /**
      * {@inheritDoc}
      * Returns an integer array of size 0 because
      * {@code Empty} objects cannot move
-     * @return the empty integer array
      */
-    public int[] possibleMoves() {
-        return new int[0];
+    public void possibleMoves() {
     }
 
     /**
@@ -37,7 +35,7 @@ public class Empty extends Piece {
     /**
      * {@inheritDoc}
      */
-    public String getType() {
-        return "Empty";
+    public char getType() {
+        return 'E';
     }
 }

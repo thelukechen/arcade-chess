@@ -30,9 +30,9 @@ public class App extends Application {
         white.setApp(this);
         black = new Dock(false);
         black.setApp(this);
-        Welcome welcome = new Welcome();
-        welcome.setApp(this);
-        this.getBoard().getStack().getChildren().add(welcome);
+//        Welcome welcome = new Welcome();
+//        welcome.setApp(this);
+//        this.getBoard().getStack().getChildren().add(welcome);
 
         bar = new MenuBar();
         Menu file = new Menu("File");
@@ -46,12 +46,12 @@ public class App extends Application {
         MenuItem resign = new MenuItem("Resign");
         game.getItems().addAll(draw, resign);
         draw.setOnAction(e -> {
-            forceStop = new ForceStop(this.getBoard().getWhoseTurn(), true);
+            forceStop = new ForceStop(this.getBoard().getColor() == 1, true);
             this.getBoard().getStack().getChildren().add(forceStop);
             forceStop.setApp(this);
         });
         resign.setOnAction(e -> {
-            forceStop = new ForceStop(this.getBoard().getWhoseTurn(), false);
+            forceStop = new ForceStop(this.getBoard().getColor() == -1, false);
             this.getBoard().getStack().getChildren().add(forceStop);
             forceStop.setApp(this);
         });
