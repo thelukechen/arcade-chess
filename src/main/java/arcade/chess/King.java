@@ -40,6 +40,44 @@ public class King extends Piece {
         this.setPossibleMoves(list);
     }
 
+    public boolean isChecked() {
+        boolean bool = true;
+        for (int i = -1; i <= 1; i++) { //-1 for down and right, 1 for up and left
+            if (i != 0) {
+                if (i == 1) {
+                bool = false;
+                }
+                Piece piece = getSquare().getBoard().squareArr[getX()][getY() + i * getColor() * lookVertical(!bool)].getPiece();
+                if (piece.getType() == 'R' || piece.getType() == 'Q') {
+                    return true;
+                }
+                piece = getSquare().getBoard().squareArr[getX() + i * getColor() * lookHorizontal(bool)][getY()].getPiece();
+                if (piece.getType() == 'R' || piece.getType() == 'Q') {
+                    return true;
+                }
+            }
+        }
+        int[] one1 = new int[] {-1, 1};
+        for (Integer i : one1) { //(-1,-1) up left. (-1,1) bot left. (1,-1) up right. (1,1) bot right
+            for (Integer j : one1) {
+                boolean right = i == -1;
+                boolean up = j == 1;
+                Piece piece = getSquare().getBoard().squareArr[getX() + i * getColor() * lookDiagonal(up, right)][getY() + j * getColor() * lookDiagonal(up, right)].getPiece();
+                if (piece.getType() == 'B' || piece.getType() == 'Q') {
+                    return true;
+                } else if (piece.getType() == 'P' && lookDiagonal(true, right) == 1) { //pawn check
+                    return true;
+                }
+            }
+        }
+        for (Piece piece : addN()) { //knight
+            if (piece.getColor() != getColor() && piece.getType() == 'N') {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -77,6 +77,7 @@ public class Pawn extends Piece {
             }
         }
     }
+
     /**
      * Returns in the {@code Pawn} has just double moved.
      * @return true if it just double moved, false otherwise

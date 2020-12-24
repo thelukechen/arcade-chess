@@ -18,6 +18,8 @@ public abstract class Piece {
     private Square square;
     private byte color;
     private int[] possibleMoves;
+    private King king;
+    private King opponent;
 
     /**
      * Returns the image of the {@code Piece} object with color.
@@ -216,6 +218,31 @@ public abstract class Piece {
         }
     }
 
+    public Piece[] addN() {
+        ArrayList<Piece> list = new ArrayList<>();
+        int coordinate;
+        int[] one = new int[] {1, -1};
+        for (Integer e : one) {
+            for (Integer i : one) {
+                //all Ls
+                coordinate = 10 * (getX() - (e * getColor())) + (getY() + (i * (2 * getColor())));
+                if (isInGrid(coordinate)) {
+                    list.add(getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece());
+                }
+                //all guns
+                coordinate = 10 * (getX() - (e * (2 * getColor()))) + (getY() + (i * getColor()));
+                if (isInGrid(coordinate)) {
+                    list.add(getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece());
+                }
+            }
+        }
+        Piece[] array = new Piece[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+
     /**
      * Checks if the given coordinates exist on the chess board.
      * @param coordinate the specified coordinate
@@ -328,5 +355,21 @@ public abstract class Piece {
      */
     public void setFirstMove(boolean firstMove) {
         this.firstMove = firstMove;
+    }
+
+    public King getKing() {
+        return this.king;
+    }
+
+    public void setKing(King king) {
+        this.king = king;
+    }
+
+    public King getOpponent() {
+        return this.opponent;
+    }
+
+    public void setOpponent(King opponent) {
+        this.opponent = opponent;
     }
 }

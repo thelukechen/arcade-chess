@@ -58,6 +58,9 @@ public class Square extends StackPane {
         this.piece.setSquare(target);
         target.setPiece(this.piece);
         this.setPiece(new Empty(x, y));
+        if (target.getPiece().getOpponent().isChecked()) {
+            System.out.println("Check");
+        }
     }
 
     public Square checkPawn(Square target) {
@@ -70,7 +73,7 @@ public class Square extends StackPane {
                     pawn.setJustDoubleMoved(true);
                 } else {
                     pawn.setJustDoubleMoved(false);
-                    if (pawn.getEnPassant() == target.coordinate) { //enpassant
+                    if (pawn.getEnPassant() == target.coordinate) { //en passant
                         pawn.setEnPassant(-1);
                         return board.squareArr[target.x][target.y - piece.getColor()];
                     }
@@ -84,7 +87,7 @@ public class Square extends StackPane {
         if (taken.getPiece().getColor() == -1) {
             board.app.getBlack().getTaken().add(taken.getPiece());
             board.app.getBlack().getTaken().updateDifference(board.app.getWhite().getTaken());
-            taken.setPiece(new Empty(taken.x, taken.y)); //remove enpassant piece
+            taken.setPiece(new Empty(taken.x, taken.y)); //remove en passant piece
         } else if (taken.getPiece().getColor() == 1) {
             board.app.getWhite().getTaken().add(taken.getPiece());
             board.app.getWhite().getTaken().updateDifference(board.app.getBlack().getTaken());

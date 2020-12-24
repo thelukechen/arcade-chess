@@ -40,6 +40,8 @@ public class Board extends BorderPane {
         super();
         GridPane grid = new GridPane();
         stack = new StackPane();
+        King whiteK = new King(true, 4, 7);
+        King blackK = new King(false, 4, 0);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Square square;
@@ -74,14 +76,21 @@ public class Board extends BorderPane {
                     //black queen
                     square = new Square(i, j, new Queen(false, i, j));
                 } else if (j == 7) {
-                    //white queen
-                    square = new Square(i, j, new King(true, i, j));
+                    //white king
+                    square = new Square(i, j, whiteK);
                 } else if (j == 0) {
-                    //black queen
-                    square = new Square(i, j, new King(false, i, j));
+                    //black king
+                    square = new Square(i, j, blackK);
                 }  else {
                     //empty squares
                     square = new Square(i, j, new Empty(i, j));
+                }
+                if (square.getPiece().getColor() == -1) { //set kings
+                    square.getPiece().setKing(whiteK);
+                    square.getPiece().setOpponent(blackK);
+                } else if (square.getPiece().getColor() == 1) {
+                    square.getPiece().setKing(blackK);
+                    square.getPiece().setOpponent(whiteK);
                 }
                 square.setBoard(this);
                 squareArr[i][j] = square;
