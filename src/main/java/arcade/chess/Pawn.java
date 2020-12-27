@@ -39,13 +39,17 @@ public class Pawn extends Piece {
         if (isFirstMove()) { //double move
             coordinate = 10 * getX() + (getY() + (2 * getColor()));
             if (lookVertical(true) > 2) {
-                list.add(coordinate);
+                if (isValidMove(coordinate)) {
+                    list.add(coordinate);
+                }
             }
         }
         coordinate = 10 * getX() + (getY() + getColor());
         if (lookVertical(true) > 0) { //up one
             if (getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getColor() == 0) {
-                list.add(coordinate);
+                if (isValidMove(coordinate)) {
+                    list.add(coordinate);
+                }
             }
         }
         addD(false, true, list); //right take

@@ -57,9 +57,9 @@ public class King extends Piece {
                 }
             }
         }
-        int[] one1 = new int[] {-1, 1};
-        for (Integer i : one1) { //(-1,-1) up left. (-1,1) bot left. (1,-1) up right. (1,1) bot right
-            for (Integer j : one1) {
+        int[] one = new int[] {-1, 1};
+        for (Integer i : one) { //(-1,-1) up left. (-1,1) bot left. (1,-1) up right. (1,1) bot right
+            for (Integer j : one) {
                 boolean right = i == -1;
                 boolean up = j == 1;
                 Piece piece = getSquare().getBoard().squareArr[getX() + i * getColor() * lookDiagonal(up, right)][getY() + j * getColor() * lookDiagonal(up, right)].getPiece();
@@ -70,9 +70,24 @@ public class King extends Piece {
                 }
             }
         }
-        for (Piece piece : addN()) { //knight
-            if (piece.getColor() != getColor() && piece.getType() == 'N') {
-                return true;
+        for (Integer e : one) { //knights
+            for (Integer i : one) {
+                //all Ls
+                int coordinate = 10 * (getX() - (e * getColor())) + (getY() + (i * (2 * getColor())));
+                if (isInGrid(coordinate)) {
+                    Piece piece = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece();
+                    if (piece.getColor() != getColor() && piece.getType() == 'N') {
+                        return true;
+                    }
+                }
+                //all guns
+                coordinate = 10 * (getX() - (e * (2 * getColor()))) + (getY() + (i * getColor()));
+                if (isInGrid(coordinate)) {
+                    Piece piece = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece();
+                    if (piece.getColor() != getColor() && piece.getType() == 'N') {
+                        return true;
+                    }
+                }
             }
         }
         return false;

@@ -42,7 +42,7 @@ public abstract class Piece {
     public boolean getPossibleMoves() {
         possibleMoves();
         if (possibleMoves.length == 0) {
-            System.out.println("No moves available for piece on " + coordinate);
+            System.out.println("No moves available for " + getType() + " on " + coordinate);
             return false;
         }
         return true;
@@ -66,7 +66,7 @@ public abstract class Piece {
      * @param target the specified {@code Square} object location
      * @return true if allowed to make move
      */
-    public boolean isValidMove(Square target) {
+    public boolean isPossibleMove(Square target) {
         for (int e : possibleMoves) {
             if (target.getCoordinate() == e) {
                 return true;
@@ -169,24 +169,49 @@ public abstract class Piece {
         return value;
     }
 
+    public boolean isValidMove(int coordinate) {
+        if (isInGrid(coordinate) && !ifOwnKingInCheck(coordinate)) {
+            return getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getColor() != this.getColor();
+        }
+        return false;
+    }
+
+    public boolean ifOwnKingInCheck(int coordinate) {
+        Piece target = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece();
+        getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].setPiece(this);
+        if (this.king.isChecked()) {
+            getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].setPiece(target);
+            return true;
+        } else {
+            getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].setPiece(target);
+            return false;
+        }
+    }
+
     public void addD(boolean up, boolean right, ArrayList<Integer> list) {
         int counter1 = right ? -1 : 1;
         if (getType() == 'P') { //pawn take
-            int coord = 10 * (getX() + (counter1 * getColor())) + (getY() + getColor());
+            int coordinate = 10 * (getX() + (counter1 * getColor())) + (getY() + getColor());
             if (lookDiagonal(true, right) == 1) {
-                if (getSquare().getBoard().squareArr[coord / 10][coord % 10].getPiece().getColor() * -1 == getColor()) {
-                    list.add(coord);
+                if (getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getColor() * -1 == getColor()) {
+                    if (isValidMove(coordinate)) {
+                        list.add(coordinate);
+                    }
                 }
             }
         } else {
             int counter2 = up ? 1 : -1;
             if (getType() == 'K') { //king
                 if (lookDiagonal(up, right) > 0) {
-                    list.add(10 * (getX() + (counter1) * getColor()) + (getY() + (counter2) * getColor()));
+                    if (isValidMove(10 * (getX() + (counter1) * getColor()) + (getY() + (counter2) * getColor()))) {
+                        list.add(10 * (getX() + (counter1) * getColor()) + (getY() + (counter2) * getColor()));
+                    }
                 }
             } else { //every other piece
                 for (int i = 1; i <= lookDiagonal(up, right); i++) {
-                    list.add(10 * (getX() + (counter1) * (i * getColor())) + (getY() + (counter2) * (i * getColor())));
+                    if (isValidMove(10 * (getX() + (counter1) * (i * getColor())) + (getY() + (counter2) * (i * getColor())))) {
+                        list.add(10 * (getX() + (counter1) * (i * getColor())) + (getY() + (counter2) * (i * getColor())));
+                    }
                 }
             }
         }
@@ -196,11 +221,15 @@ public abstract class Piece {
         int counter = up ? 1 : -1;
         if (getType() == 'K') { //king
             if (lookVertical(up) > 0) {
-                list.add(10 * getX() + (getY() + (counter) * getColor()));
+                if (isValidMove(10 * getX() + (getY() + (counter) * getColor()))) {
+                    list.add(10 * getX() + (getY() + (counter) * getColor()));
+                }
             }
         } else { //every other piece
             for (int i = 1; i <= lookVertical(up); i++) {
-                list.add(10 * getX() + (getY() + (counter) * (i * getColor())));
+                if (isValidMove(10 * getX() + (getY() + (counter) * (i * getColor())))) {
+                    list.add(10 * getX() + (getY() + (counter) * (i * getColor())));
+                }
             }
         }
     }
@@ -209,38 +238,17 @@ public abstract class Piece {
         int counter = right ? -1 : 1;
         if (getType() == 'K') { //king
             if (lookHorizontal(right) > 0) {
-                list.add(10 * (getX() + (counter) * getColor()) + getY());
+                if (isValidMove(10 * (getX() + (counter) * getColor()) + getY())) {
+                    list.add(10 * (getX() + (counter) * getColor()) + getY());
+                }
             }
         } else {
             for (int i= 1; i <= lookHorizontal(right); i++) {
-                list.add(10 * (getX() + (counter) * (i * getColor())) + getY());
-            }
-        }
-    }
-
-    public Piece[] addN() {
-        ArrayList<Piece> list = new ArrayList<>();
-        int coordinate;
-        int[] one = new int[] {1, -1};
-        for (Integer e : one) {
-            for (Integer i : one) {
-                //all Ls
-                coordinate = 10 * (getX() - (e * getColor())) + (getY() + (i * (2 * getColor())));
-                if (isInGrid(coordinate)) {
-                    list.add(getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece());
-                }
-                //all guns
-                coordinate = 10 * (getX() - (e * (2 * getColor()))) + (getY() + (i * getColor()));
-                if (isInGrid(coordinate)) {
-                    list.add(getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece());
+                if (isValidMove(10 * (getX() + (counter) * (i * getColor())) + getY())) {
+                    list.add(10 * (getX() + (counter) * (i * getColor())) + getY());
                 }
             }
         }
-        Piece[] array = new Piece[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-        return array;
     }
 
     /**
@@ -284,7 +292,7 @@ public abstract class Piece {
 
     /**
      * Returns the {@code Square} object where the {@code Piece} is located.
-     * @return the speific {@code Square}
+     * @return the specific {@code Square}
      */
     public Square getSquare() {
         return square;
@@ -301,12 +309,12 @@ public abstract class Piece {
     /**
      * Sets the new coordinates of the {@code Piece}.
      * Also changes the values of {@code x} and {@code y}.
-     * @param coord the specified coordinates
+     * @param coordinate the specified coordinates
      */
-    public void setCoordinate(int coord) {
-        this.setX(coord / 10);
-        this.setY(coord % 10);
-        this.coordinate = coord;
+    public void setCoordinate(int coordinate) {
+        this.setX(coordinate / 10);
+        this.setY(coordinate % 10);
+        this.coordinate = coordinate;
     }
 
     /**

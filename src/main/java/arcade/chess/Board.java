@@ -130,7 +130,7 @@ public class Board extends BorderPane {
                 source = target;
                 source.getPiece().getPossibleMoves();
             } else {
-                if (source.getPiece().isValidMove(target)) {
+                if (source.getPiece().isPossibleMove(target)) {
                     source.moveTo(target);
                     color = (byte) (color == 1 ? -1 : 1);
                 } else {

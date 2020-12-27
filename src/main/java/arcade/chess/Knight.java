@@ -28,9 +28,18 @@ public class Knight extends Piece {
      */
     public void possibleMoves() {
         ArrayList<Integer> list = new ArrayList<>();
-        for (Piece piece : addN()) {
-            if (piece.getColor() != this.getColor()) {
-                list.add(piece.getCoordinate());
+        int coordinate;
+        int[] one = new int[] {1, -1};
+        for (Integer e : one) {
+            for (Integer i : one) {
+                coordinate = 10 * (getX() - (e * getColor())) + (getY() + (i * (2 * getColor()))); //all Ls
+                if (isValidMove(coordinate)) {
+                    list.add(coordinate);
+                }
+                coordinate = 10 * (getX() - (e * (2 * getColor()))) + (getY() + (i * getColor())); //all guns
+                if (isValidMove(coordinate)) {
+                    list.add(coordinate);
+                }
             }
         }
         this.setPossibleMoves(list);
