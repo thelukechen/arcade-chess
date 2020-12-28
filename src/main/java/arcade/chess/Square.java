@@ -59,8 +59,24 @@ public class Square extends StackPane {
         target.setPiece(this.piece);
         this.setPiece(new Empty(x, y));
         if (target.getPiece().getOpponent().isChecked()) {
-            System.out.println("Check");
+            if (ifCheckMate()) {
+                System.out.println("Checkmate");
+            } else {
+                System.out.println("Check");
+            }
         }
+    }
+
+    public boolean ifCheckMate() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = getBoard().squareArr[i][j].getPiece();
+                if (this.piece.getColor() == piece.getColor() && piece.getPossibleMoves()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public Square checkPawn(Square target) {

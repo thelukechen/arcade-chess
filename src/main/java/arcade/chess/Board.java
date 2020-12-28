@@ -118,6 +118,8 @@ public class Board extends BorderPane {
             if (source.getPiece().getColor() == color) {
                 if (source.getPiece().getPossibleMoves()) {
                     firstClick = false;
+                } else {
+                    System.out.println("No moves available for " + source.getPiece().getType() + " on " + source.getCoordinate());
                 }
             } else if (source.getPiece().getColor() - color == 2) {
                 System.out.println("It is white's turn.");
@@ -128,7 +130,9 @@ public class Board extends BorderPane {
             Square target = (Square) e.getSource();
             if (color == target.getPiece().getColor()) {
                 source = target;
-                source.getPiece().getPossibleMoves();
+                if (!source.getPiece().getPossibleMoves()) {
+                    System.out.println("No moves available for " + source.getPiece().getType() + " on " + source.getCoordinate());
+                }
             } else {
                 if (source.getPiece().isPossibleMove(target)) {
                     source.moveTo(target);

@@ -41,11 +41,7 @@ public abstract class Piece {
 
     public boolean getPossibleMoves() {
         possibleMoves();
-        if (possibleMoves.length == 0) {
-            System.out.println("No moves available for " + getType() + " on " + coordinate);
-            return false;
-        }
-        return true;
+        return possibleMoves.length != 0;
     }
 
     /**
@@ -178,12 +174,16 @@ public abstract class Piece {
 
     public boolean ifOwnKingInCheck(int coordinate) {
         Piece target = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece();
+        int first = this.coordinate;
         getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].setPiece(this);
+        this.setCoordinate(coordinate);
         if (this.king.isChecked()) {
             getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].setPiece(target);
+            this.setCoordinate(first);
             return true;
         } else {
             getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].setPiece(target);
+            this.setCoordinate(first);
             return false;
         }
     }
