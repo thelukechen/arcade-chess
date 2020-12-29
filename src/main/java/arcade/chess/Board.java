@@ -145,6 +145,9 @@ public class Board extends BorderPane {
         }
     }
 
+    /**
+     * Creates the rest of the {@code Board} GUI.
+     */
     public void restOfBoard() {
         Color background = Color.rgb(139,69,19);
         HBox top = new HBox(new Label());
@@ -204,6 +207,10 @@ public class Board extends BorderPane {
         this.app = app;
     }
 
+    /**
+     * Returns the color of the current {@code Board}.
+     * @return the color of the Board
+     */
     public byte getColor() {
         return color;
     }

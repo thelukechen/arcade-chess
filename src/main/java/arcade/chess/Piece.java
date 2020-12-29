@@ -39,6 +39,10 @@ public abstract class Piece {
      */
     public abstract void possibleMoves();
 
+    /**
+     * Finds possible moves of a {@code Piece}.
+     * @return true if there is a possible move, false otherwise
+     */
     public boolean getPossibleMoves() {
         possibleMoves();
         return possibleMoves.length != 0;
@@ -72,7 +76,8 @@ public abstract class Piece {
     }
 
     /**
-     * Number of squares vertical of the piece that have an {@code Empty} piece.
+     * Number of squares vertical of the piece that have an {@code Empty} piece
+     * or opponent piece.
      *
      * @param up true for up, false for down
      * @return value
@@ -101,7 +106,8 @@ public abstract class Piece {
     }
 
     /**
-     * Number of squares horizontal of the piece that have an {@code Empty} piece.
+     * Number of squares horizontal of the piece that have an {@code Empty} piece
+     * or an opponent piece.
      *
      * @param right true for right, false for left
      * @return value
@@ -130,7 +136,8 @@ public abstract class Piece {
     }
 
     /**
-     * Number of squares along the diagonals.
+     * Number of squares along the diagonals with an {@code Empty}
+     * or opponent {@code Piece}..
      *
      * @param up true for above, false for below
      * @param right true for right, false for left
@@ -165,6 +172,12 @@ public abstract class Piece {
         return value;
     }
 
+    /**
+     * Decides if the {@code Piece} is a valid move. Shows if the {@code Piece}
+     * is in the grid and not exposing the {@code King} to check.
+     * @param coordinate the coordinate
+     * @return true if moves if allowed, false otherwise
+     */
     public boolean isValidMove(int coordinate) {
         if (isInGrid(coordinate) && !ifOwnKingInCheck(coordinate)) {
             return getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece().getColor() != this.getColor();
@@ -172,6 +185,12 @@ public abstract class Piece {
         return false;
     }
 
+    /**
+     * Checks if the {@code Piece} moving to the {@code coordinate} causes its
+     * {@code King} to be in check.
+     * @param coordinate the coordinate
+     * @return true if own {@code King} is in check
+     */
     public boolean ifOwnKingInCheck(int coordinate) {
         Piece target = getSquare().getBoard().squareArr[coordinate / 10][coordinate % 10].getPiece();
         int first = this.coordinate;
@@ -188,6 +207,12 @@ public abstract class Piece {
         }
     }
 
+    /**
+     * Adds the diagonal possible moves of that {@code Piece}.
+     * @param up true if up, false if down
+     * @param right true if right, false if left
+     * @param list the list of possible moves
+     */
     public void addD(boolean up, boolean right, ArrayList<Integer> list) {
         int counter1 = right ? -1 : 1;
         if (getType() == 'P') { //pawn take
@@ -217,6 +242,11 @@ public abstract class Piece {
         }
     }
 
+    /**
+     * Adds the vertical possible moves of that {@code Piece}.
+     * @param up true if up, false if down
+     * @param list the list of possible moves
+     */
     public void addV(boolean up, ArrayList<Integer> list) {
         int counter = up ? 1 : -1;
         if (getType() == 'K') { //king
@@ -234,6 +264,12 @@ public abstract class Piece {
         }
     }
 
+    /**
+     * Adds the horizontal possible moves of that {@code Piece}.
+     *
+     * @param right true if right, false if left
+     * @param list the list of possible moves
+     */
     public void addH(boolean right, ArrayList<Integer> list) {
         int counter = right ? -1 : 1;
         if (getType() == 'K') { //king

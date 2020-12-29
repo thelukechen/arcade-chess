@@ -41,6 +41,10 @@ public class King extends Piece {
         this.setPossibleMoves(list);
     }
 
+    /**
+     * Adds the {@code King}'s movement if a castle if allowed.
+     * @param list the list of possible moves
+     */
     public void addCastle(ArrayList<Integer> list) {
         if (isFirstMove()) {
             if (getColor() == -1) {
@@ -69,6 +73,10 @@ public class King extends Piece {
         }
     }
 
+    /**
+     * Checks if the {@code King} is in check before and after a move.
+     * @return true if the King is in check, false otherwise
+     */
     public boolean isChecked() {
         boolean bool = true;
         for (int i = -1; i <= 1; i++) { //-1 for down and right, 1 for up and left

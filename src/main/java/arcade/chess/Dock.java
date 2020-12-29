@@ -52,7 +52,8 @@ public class Dock extends HBox {
         pic.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         text.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
         text.setTextFill(Color.WHITE);
-        vbox.getChildren().addAll(text, new Text("Timer"), taken);
+        //vbox.getChildren().addAll(text, new Text("Timer"), taken);
+        vbox.getChildren().addAll(text, taken);
         vbox.setAlignment(Pos.CENTER_LEFT);
         this.getChildren().addAll(pic, vbox);
         this.setPadding(new Insets(15));

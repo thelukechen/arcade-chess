@@ -51,6 +51,10 @@ public class Square extends StackPane {
         this.setMinSize(100, 100);
     }
 
+    /**
+     * Executes the move of a {@code Piece} to a target {@code Square}.
+     * @param target the target {@code Square}
+     */
     public void moveTo(Square target) {
         checkTaken(checkPawn(target));
         checkCastle(target);
@@ -68,6 +72,11 @@ public class Square extends StackPane {
         }
     }
 
+    /**
+     * Checks if the {@code King} just performed a castle.
+     * Moves the rook accordingly.
+     * @param target the target {@code Square}
+     */
     public void checkCastle(Square target) {
         if (this.getPiece().getType() == 'K') {
             if (target.coordinate - this.coordinate == 20 || target.coordinate - this.coordinate == -20) {
@@ -100,6 +109,11 @@ public class Square extends StackPane {
         }
     }
 
+    /**
+     * Checks if the move checkmated the opponent.
+     * @param target the target {@code Square}
+     * @return true if checkmate, false otherwise
+     */
     public boolean ifCheckMate(Square target) {
         int numOpposingPieces = 0;
         int numNoMoves = 0;
@@ -117,6 +131,11 @@ public class Square extends StackPane {
         return numOpposingPieces == numNoMoves;
     }
 
+    /**
+     * Checks for pawn functionality of promotions, double moves, and en passants.
+     * @param target the target {@code Square}
+     * @return the {@code Square} of a possible taken piece.
+     */
     public Square checkPawn(Square target) {
         if (piece.getType() == 'P') {
             if (target.y == 0 || target.y == 7) { //promotion
@@ -137,6 +156,11 @@ public class Square extends StackPane {
         return target;
     }
 
+    /**
+     * Checks if the move execution called for a {@code Piece}
+     * to be taken. Also updates the respective {@code TakenGrid}.
+     * @param taken the {@code Square} with a taken piece
+     */
     public void checkTaken(Square taken) {
         if (taken.getPiece().getColor() == -1) {
             board.app.getBlack().getTaken().add(taken.getPiece());
