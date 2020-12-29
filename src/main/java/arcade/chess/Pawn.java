@@ -38,7 +38,7 @@ public class Pawn extends Piece {
         int coordinate;
         if (isFirstMove()) { //double move
             coordinate = 10 * getX() + (getY() + (2 * getColor()));
-            if (lookVertical(true) > 2) {
+            if (lookVertical(true) >= 2) {
                 if (isValidMove(coordinate)) {
                     list.add(coordinate);
                 }

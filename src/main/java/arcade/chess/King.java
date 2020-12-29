@@ -37,7 +37,36 @@ public class King extends Piece {
         addD(false, false, list);
         addD(true, false, list);
         addD(false, true, list);
+        addCastle(list);
         this.setPossibleMoves(list);
+    }
+
+    public void addCastle(ArrayList<Integer> list) {
+        if (isFirstMove()) {
+            if (getColor() == -1) {
+                if (lookHorizontal(true) >= 2 && getSquare().getBoard().squareArr[7][7].getPiece().isFirstMove()) {
+                    if (isValidMove(57) && isValidMove(67)) {
+                        list.add(67);
+                    }
+                }
+                if (lookHorizontal(false) >= 2 && getSquare().getBoard().squareArr[0][7].getPiece().isFirstMove()) {
+                    if (isValidMove(27) && isValidMove(37)) {
+                        list.add(27);
+                    }
+                }
+            } else {
+                if (lookHorizontal(true) >= 2 && getSquare().getBoard().squareArr[0][0].getPiece().isFirstMove()) {
+                    if (isValidMove(20) && isValidMove(30)) {
+                        list.add(20);
+                    }
+                }
+                if (lookHorizontal(false) >= 2 && getSquare().getBoard().squareArr[7][0].getPiece().isFirstMove()) {
+                    if (isValidMove(50) && isValidMove(60)) {
+                        list.add(60);
+                    }
+                }
+            }
+        }
     }
 
     public boolean isChecked() {

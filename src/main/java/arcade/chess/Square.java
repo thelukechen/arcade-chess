@@ -53,13 +53,14 @@ public class Square extends StackPane {
 
     public void moveTo(Square target) {
         checkTaken(checkPawn(target));
+        checkCastle(target);
         this.piece.setFirstMove(false);
         this.piece.setCoordinate(target.coordinate);
         this.piece.setSquare(target);
         target.setPiece(this.piece);
         this.setPiece(new Empty(x, y));
         if (target.getPiece().getOpponent().isChecked()) {
-            if (ifCheckMate()) {
+            if (ifCheckMate(target)) {
                 System.out.println("Checkmate");
             } else {
                 System.out.println("Check");
@@ -67,16 +68,53 @@ public class Square extends StackPane {
         }
     }
 
-    public boolean ifCheckMate() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                Piece piece = getBoard().squareArr[i][j].getPiece();
-                if (this.piece.getColor() == piece.getColor() && piece.getPossibleMoves()) {
-                    return false;
+    public void checkCastle(Square target) {
+        if (this.getPiece().getType() == 'K') {
+            if (target.coordinate - this.coordinate == 20 || target.coordinate - this.coordinate == -20) {
+                if (target.coordinate == 67) {
+                    getBoard().squareArr[5][7].setPiece(getBoard().squareArr[7][7].getPiece());
+                    getBoard().squareArr[5][7].getPiece().setFirstMove(false);
+                    getBoard().squareArr[5][7].getPiece().setCoordinate(57);
+                    getBoard().squareArr[5][7].getPiece().setSquare(getBoard().squareArr[5][7]);
+                    getBoard().squareArr[7][7].setPiece(new Empty(7, 7));
+                } else if (target.coordinate == 27) {
+                    getBoard().squareArr[3][7].setPiece(getBoard().squareArr[0][7].getPiece());
+                    getBoard().squareArr[3][7].getPiece().setFirstMove(false);
+                    getBoard().squareArr[3][7].getPiece().setCoordinate(37);
+                    getBoard().squareArr[3][7].getPiece().setSquare(getBoard().squareArr[3][7]);
+                    getBoard().squareArr[0][7].setPiece(new Empty(0, 7));
+                } else if (target.coordinate == 20) {
+                    getBoard().squareArr[3][0].setPiece(getBoard().squareArr[0][0].getPiece());
+                    getBoard().squareArr[3][0].getPiece().setFirstMove(false);
+                    getBoard().squareArr[3][0].getPiece().setCoordinate(30);
+                    getBoard().squareArr[3][0].getPiece().setSquare(getBoard().squareArr[3][0]);
+                    getBoard().squareArr[0][0].setPiece(new Empty(0, 0));
+                } else if (target.coordinate == 60) {
+                    getBoard().squareArr[5][0].setPiece(getBoard().squareArr[7][0].getPiece());
+                    getBoard().squareArr[5][0].getPiece().setFirstMove(false);
+                    getBoard().squareArr[5][0].getPiece().setCoordinate(50);
+                    getBoard().squareArr[5][0].getPiece().setSquare(getBoard().squareArr[5][0]);
+                    getBoard().squareArr[7][0].setPiece(new Empty(7, 0));
                 }
             }
         }
-        return true;
+    }
+
+    public boolean ifCheckMate(Square target) {
+        int numOpposingPieces = 0;
+        int numNoMoves = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece piece = getBoard().squareArr[i][j].getPiece();
+                if (piece.getColor() * -1 == target.piece.getColor()) {
+                    numOpposingPieces++;
+                    if (!piece.getPossibleMoves()) {
+                        numNoMoves++;
+                    }
+                }
+            }
+        }
+        return numOpposingPieces == numNoMoves;
     }
 
     public Square checkPawn(Square target) {
