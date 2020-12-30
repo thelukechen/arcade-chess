@@ -70,6 +70,8 @@ public class Promotion extends HBox {
         for (Piece e : pieces) {
             if (e.getType() == button.getText().charAt(0)) {
                 Square square = this.app.getBoard().squareArr[coordinates / 10][coordinates % 10];
+                e.setKing(square.getPiece().getKing());
+                e.setOpponent(square.getPiece().getOpponent());
                 square.setPiece(e);
                 square.getPiece().setSquare(square);
                 break;
