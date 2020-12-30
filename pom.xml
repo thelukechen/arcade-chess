@@ -45,7 +45,7 @@
           <artifactId>javafx-maven-plugin</artifactId>
           <version>0.0.4</version>
           <configuration>
-            <mainClass>arcade.chess.App</mainClass>
+            <mainClass>arcade.chess.gui.App</mainClass>
           </configuration>
         </plugin>
         <plugin>
