@@ -1,5 +1,7 @@
-package arcade.chess;
+package arcade.chess.pieces;
 
+import arcade.chess.App;
+import arcade.chess.Piece;
 import javafx.scene.image.Image;
 import java.util.ArrayList;
 
@@ -42,6 +44,7 @@ public class Rook extends Piece {
         if (getColor() == -1) {
             return new Image("/rookW.png", 80, 80, true, false);
         } else {
+            //return App.loadImage("rookB.png");
             return new Image("/rookB.png", 80, 80, true, false);
         }
     }

@@ -1,5 +1,6 @@
 package arcade.chess;
 
+import arcade.chess.pieces.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

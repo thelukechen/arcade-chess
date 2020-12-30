@@ -1,5 +1,9 @@
 package arcade.chess;
 
+import arcade.chess.pieces.Bishop;
+import arcade.chess.pieces.Knight;
+import arcade.chess.pieces.Queen;
+import arcade.chess.pieces.Rook;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -70,6 +74,8 @@ public class Promotion extends HBox {
         for (Piece e : pieces) {
             if (e.getType() == button.getText().charAt(0)) {
                 Square square = this.app.getBoard().squareArr[coordinates / 10][coordinates % 10];
+                e.setKing(square.getPiece().getKing());
+                e.setOpponent(square.getPiece().getOpponent());
                 square.setPiece(e);
                 square.getPiece().setSquare(square);
                 break;

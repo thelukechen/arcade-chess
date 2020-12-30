@@ -5,8 +5,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.InputStream;
 
 /**
  * Executes a {@code Chess} game.
@@ -116,5 +119,10 @@ public class App extends Application {
 
     public Menu getGame() {
         return game;
+    }
+
+    public static Image loadImage(String url) {
+        var is = App.class.getResourceAsStream(url);
+        return (is == null) ? null : new Image(is, 80, 80, true, false);
     }
 }

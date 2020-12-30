@@ -1,5 +1,6 @@
-package arcade.chess;
+package arcade.chess.pieces;
 
+import arcade.chess.Piece;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;

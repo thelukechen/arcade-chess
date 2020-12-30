@@ -1,5 +1,6 @@
 package arcade.chess;
 
+import arcade.chess.pieces.Empty;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
